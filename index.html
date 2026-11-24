@@ -88,6 +88,12 @@ a{color:var(--teal-700)}
 .topbar .linkish{background:none;border:0;color:var(--muted);font-size:12.5px;font-weight:650;padding:8px 10px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .topbar .linkish:hover{background:var(--mint-50);color:var(--teal-700)}
 .topbar .linkish svg{width:16px;height:16px}
+.sync-pill{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--teal-700);background:var(--mint-50);border:1px solid var(--mint-200);border-radius:999px;padding:4px 8px;font-weight:750;white-space:nowrap;letter-spacing:.02em}
+.sync-pill[hidden]{display:none}
+.sync-pill i{width:6px;height:6px;border-radius:50%;background:var(--teal-500);flex:0 0 auto}
+.sync-pill[data-state="saving"] i{background:#C58A00;animation:pulse 1.2s infinite}
+.sync-pill[data-state="error"]{color:#9B2C20;border-color:#F3C7C2;background:#FEF0EE}
+.sync-pill[data-state="error"] i{background:#B42318}
 @media(max-width:760px){
   .topbar-in{padding:9px 14px;min-height:56px;gap:8px}
   .brand .logo{width:32px;height:32px}
@@ -97,6 +103,8 @@ a{color:var(--teal-700)}
   .top-progress .lbl{display:none}
   .top-actions .linkish{padding:7px}
   .top-actions .linkish span{display:none}
+  .sync-pill{font-size:0;gap:0;padding:6px;border-radius:50%}
+  .sync-pill i{width:7px;height:7px}
 }
 
 /* ============ buttons ============ */
@@ -284,6 +292,12 @@ h3{letter-spacing:-.015em}
 .team-banner{display:flex;gap:11px;align-items:flex-start;background:linear-gradient(180deg,#F4FBF8,#EAF6F2);border:1px solid var(--mint-200);border-radius:14px;padding:12px 15px;margin:0 0 16px;font-size:12.8px;color:#34514A;line-height:1.5}
 .team-banner>svg{width:18px;height:18px;color:var(--teal-600);flex:0 0 auto;margin-top:1px}
 .team-banner b{display:block;font-size:13px;color:var(--teal-900);margin-bottom:2px;letter-spacing:-.005em}
+.resume-banner{display:flex;gap:11px;align-items:center;background:#F0FAF5;border:1px solid #C9E8D9;border-radius:14px;padding:12px 15px;margin:0 0 16px;font-size:12.8px;color:#2F5047;line-height:1.5}
+.resume-banner>svg{width:18px;height:18px;color:var(--teal-600);flex:0 0 auto}
+.resume-banner>div{flex:1;min-width:0}
+.resume-banner b{display:block;font-size:13px;color:var(--teal-900);margin-bottom:2px}
+.resume-banner .btn{flex:0 0 auto}
+@media(max-width:640px){.resume-banner{flex-wrap:wrap}.resume-banner .btn{width:100%}}
 @media(max-width:640px){.setup-summary{position:fixed;left:10px;right:10px;bottom:10px;margin:0;padding:11px 12px}.setup-summary .btn{width:100%}.setup-summary .nums{width:100%}}
 .role-hint{margin-top:4px;font-size:11.6px;color:var(--teal-700);display:flex;align-items:center;gap:6px}
 .role-hint svg{width:13px;height:13px}
@@ -446,6 +460,11 @@ h3{letter-spacing:-.015em}
 .modal-label{display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#53665F;font-weight:800;margin:14px 0 5px}
 .modal-input{width:100%;border:1.5px solid var(--line-strong);border-radius:10px;padding:10px 12px;font:12px var(--mono);background:#FCFEFD;color:#233B34}
 .modal-input:focus{border-color:var(--teal-500);outline:none;box-shadow:0 0 0 3px rgba(18,133,124,.12)}
+@media(max-width:620px){
+  .modal .box{padding:20px 18px}
+  .modal .box .row{flex-direction:column;align-items:stretch}
+  .modal .box .row .btn{width:100%}
+}
 
 /* ============ section done / review ============ */
 .done-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
@@ -515,7 +534,24 @@ h3{letter-spacing:-.015em}
 .receipt>div{text-align:left}
 .receipt span{display:block;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--soft);font-weight:800;margin-bottom:2px}
 .receipt b{font-size:12.5px;letter-spacing:-.005em;word-break:break-word}
+.session-card{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 18px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:16px auto 0;max-width:640px;box-shadow:var(--shadow)}
+.session-card span{display:block;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--soft);font-weight:800;margin-bottom:2px}
+.session-card b{font-size:12.5px;word-break:break-word}
+@media(max-width:560px){.session-card{grid-template-columns:1fr 1fr;padding:14px}}
 .sent-box .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px}
+.save-fab{display:none;align-items:center;gap:7px;border:1px solid #B6D9D1;background:rgba(255,255,255,.97);color:var(--teal-800);border-radius:999px;padding:10px 15px;font-size:12px;font-weight:800;box-shadow:0 12px 26px -14px rgba(10,45,38,.55);cursor:pointer;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:56;white-space:nowrap}
+.save-fab svg{width:15px;height:15px}
+.save-fab:active{transform:translateY(1px)}
+@media(max-width:620px){
+  .save-fab{display:inline-flex;position:fixed;right:12px;bottom:calc(96px + env(safe-area-inset-bottom))}
+  .save-fab.review{bottom:calc(16px + env(safe-area-inset-bottom))}
+  .field input,.field select,.field textarea,.q-textarea,.whoknows input,.other-input input,.modal-input{font-size:16px}
+  .btn{min-height:44px}
+  .assist{min-height:36px}
+  .choice{min-height:44px}
+  .sec-card{min-height:64px}
+  .setup-summary{padding-bottom:calc(11px + env(safe-area-inset-bottom))}
+}
 
 /* ============ extras tables ============ */
 .extra-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
@@ -717,6 +753,7 @@ const ICONS = {
   send: '<path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/>',
   share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',
   refresh: '<path d="M21 12a9 9 0 1 1-3-6.7M21 3v6h-6"/>',
+  bookmark: '<path d="M6 3h12a2 2 0 0 1 2 2v16l-8-5-8 5V5a2 2 0 0 1 2-2z"/>',
   layers: '<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>'
 };
 const icon = (name, cls) => `<svg${cls ? ` class="${cls}"` : ''} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
@@ -764,7 +801,11 @@ function blankState() {
     refReturn: 'welcome',
     teamLink: false,
     savedReceipt: null,
-    serverPayload: null
+    serverPayload: null,
+    sessionId: null,
+    pendingSession: null,
+    resumed: false,
+    sessionSavedAt: null
   };
 }
 const state = blankState();
@@ -833,7 +874,7 @@ function renderTopbar() {
   const bar = $('#topbar');
   const active = state.screen !== 'welcome';
   const stats = overallStats();
-  const showProgress = state.screen !== 'coordinator';
+  const showProgress = !['coordinator', 'resume', 'already'].includes(state.screen);
   const embed = EMBEDDED ? `<div class="embed-bar"><b>Preview mode.</b> This shared view blocks file downloads. Use <button type="button" data-action="embed:copy">Copy answers</button> instead — or host this file for the full response flow.</div>` : '';
   if (!active) {
     bar.innerHTML = `<div class="topbar-in">
@@ -858,10 +899,11 @@ function renderTopbar() {
     ${showProgress ? `<div class="top-progress" aria-label="Overall progress">
       <div class="bar"><i id="overall-bar" style="width:${stats.pct}%"></i></div>
       <span class="lbl"><b id="overall-count">${stats.answered}</b> of ${stats.total || DATA.meta.questionCount} answered</span>
-    </div>` : ''}
+    </div>
+    <span class="sync-pill" id="syncPill" hidden></span>` : ''}
     <div class="top-actions">
       ${state.current ? `<button class="linkish" data-action="sections:open" aria-label="Switch or review sections" title="Switch or review sections">${icon('grid')}<span>Sections</span></button>` : ''}
-      <button class="linkish" data-action="draft:download" aria-label="Save a draft file" title="Save a draft file">${icon('download')}<span>Save draft</span></button>
+      ${!['resume', 'already', 'saved'].includes(state.screen) ? `<button class="linkish save-top" data-action="session:save" aria-label="Save and resume later" title="Save and resume later">${icon('bookmark')}<span>Save &amp; resume</span></button>` : ''}
     </div>
   </div>${embed}`;
 }
@@ -947,7 +989,7 @@ function renderWelcome() {
         <div class="steps">
           <div class="step"><div class="num">1</div><h4>Pick your section</h4><p>Choose the department you answer for. One person can cover more than one; several people can cover the same section.</p></div>
           <div class="step"><div class="num">2</div><h4>Answer at your pace</h4><p>Priority questions first. “Don't know” and “No rule yet” are valid, useful answers.</p></div>
-          <div class="step"><div class="num">3</div><h4>Save if you need to</h4><p>Download a draft file and resume later on any device.</p></div>
+          <div class="step"><div class="num">3</div><h4>Progress saves itself</h4><p>Your answers save automatically to this session on the server. Close the tab and resume later on this device.</p></div>
           <div class="step"><div class="num">4</div><h4>Send it back</h4><p>Submit directly when the form is hosted, or download your response and send it on WhatsApp or email.</p></div>
         </div>
       </div>
@@ -1004,6 +1046,7 @@ function renderSetup() {
   }).join('');
   const teamNames = state.selected.map((c) => SECTIONS[c].name).join(', ');
   const teamBanner = state.teamLink && state.selected.length ? `<div class="team-banner">${icon('users')}<div><b>Team link · ${esc(teamNames)}</b><span>2 or more staff can answer this section. Each person enters their own name and submits their own answers — Dependify reviews them together.${state.respondent.store ? ` Store: ${esc(state.respondent.store)}.` : ''}</span></div></div>` : '';
+  const resumeBanner = state.resumed ? `<div class="resume-banner">${icon('check')}<div><b>Saved session restored${state.respondent.name ? ' — ' + esc(state.respondent.name) : ''}</b><span>Your answers are back. Continue below, or start a new person on this shared device.</span></div><button type="button" class="btn ghost sm" data-action="session:fresh">Start a new person</button></div>` : '';
 
   return `<div class="wrap" style="max-width:1160px">
     <div class="page-head">
@@ -1011,7 +1054,7 @@ function renderSetup() {
       <h1>Who is answering?</h1>
       <p>Tell us who you are and pick the section(s) you will answer. If someone else helped you, name them — it saves a follow-up call.</p>
     </div>
-    ${teamBanner}
+    ${teamBanner}${resumeBanner}
     <div class="setup-grid">
       <div class="panel">
         <h2>About you</h2>
@@ -1034,7 +1077,7 @@ function renderSetup() {
 
       <div class="panel">
         <h2>Which section(s) will you answer?</h2>
-        <p class="panel-sub">Pick one. Pick more only if you genuinely cover them. Multiple staff can answer the same section — each should submit their own name. The project-wide card includes the SOP owner confirmations, RACI table and document checklist.</p>
+        <p class="panel-sub">Pick one. Pick more only if you genuinely cover them. Multiple staff can answer the same section — each should submit their own name. Your progress saves automatically once you start; use “Save &amp; resume” at any time.</p>
         <div class="sec-picker">${sectionCards}</div>
         <div class="callout" style="margin-top:16px">${icon('info')} <b>Answer only your section.</b> Each section's questions are written for that department; questions you don't know are still useful when you say who does.</div>
       </div>
@@ -1149,6 +1192,7 @@ function renderIntro() {
             <button class="btn lg" data-action="section:start" data-mode="continue">${st.answered ? 'Continue section' : 'Start section'} ${icon('arrowR')}</button>
             ${st.answered ? `<button class="btn ghost" data-action="section:start" data-mode="begin">Start from the beginning</button>` : ''}
             ${st.answered ? `<button class="btn ghost" data-action="review:open">Review & send</button>` : ''}
+            <button class="btn ghost" data-action="session:save">${icon('bookmark')} Save &amp; resume</button>
             <button class="btn-link" data-action="map:open">${icon('grid')} Question map</button>
           </div>
           <div class="share-row">
@@ -1278,6 +1322,7 @@ function renderQuestion() {
             <div class="qcount">Question <b>${state.qIndex + 1}</b> of ${sec.questions.length}${priLeft ? ` · <b>${priLeft}</b> priority open` : ''}</div>
             <button class="btn" data-action="q:next">${last ? 'Finish section' : 'Next'} ${icon('arrowR')}</button>
           </div>
+          <button type="button" class="save-fab" data-action="session:save">${icon('bookmark')} Save &amp; resume later</button>
         </div>
       </div>
     </div>
@@ -1314,6 +1359,7 @@ function renderSectionDone() {
         <button class="btn" data-action="review:open">Review & send ${icon('arrowR')}</button>
         ${nextCode ? `<button class="btn ghost" data-action="section:switch" data-code="${nextCode}">Next section: ${esc(SECTIONS[nextCode].short)} ${icon('arrowR')}</button>` : ''}
         <button class="btn ghost" data-action="section:start" data-mode="begin">Keep editing</button>
+        <button class="btn ghost" data-action="session:save">${icon('bookmark')} Save &amp; resume</button>
         <button class="btn ghost" data-action="section:share" data-code="${sec.code}">${icon('share')} Share section</button>
       </div>
       ${codes.length > 1 ? `<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:18px">${codes.map((c) => { const cst = sectionStats(c); return `<span class="pill ${cst.answered === cst.total ? '' : 'grey'}" style="--c:${SECTIONS[c].color}">${c} · ${cst.answered}/${cst.total}</span>`; }).join('')}</div>` : ''}
@@ -1553,8 +1599,9 @@ function renderReview() {
 
     <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px">
       <button class="btn-link" data-action="nav:setup">${icon('arrowL')} Back to respondent details</button>
-      <button class="btn-link" data-action="draft:download">${icon('download')} Save an incomplete draft</button>
+      <button class="btn-link" data-action="session:save">${icon('bookmark')} Save &amp; resume later</button>
     </div>
+    <button type="button" class="save-fab review" data-action="session:save">${icon('bookmark')} Save &amp; resume later</button>
     ${foot()}
   </div>`;
 }
@@ -1623,7 +1670,60 @@ function renderSaved() {
   </div>`;
 }
 
+/* ===== resume a saved session ===== */
+function renderResume() {
+  const p = state.pendingSession;
+  if (!p) return renderWelcome();
+  const r = p.respondent || {};
+  const codes = (p.sections || []).filter((c) => SECTIONS[c]);
+  const when = p.updated_at ? new Date(p.updated_at).toLocaleString('en-GB') : '—';
+  const first = String(r.name || '').trim().split(/\s+/)[0];
+  return `<div class="wrap narrow">
+    <div class="sent-box">
+      <div class="ring">${icon('users')}</div>
+      <h1>Welcome back${first ? ', ' + esc(first) : ''}.</h1>
+      <p>This device has a saved session. Your answers are on the server, so you can pick up exactly where you left off.</p>
+      <div class="session-card">
+        <div><span>Name</span><b>${esc(r.name || '—')}</b></div>
+        <div><span>Role</span><b>${esc(r.role || '—')}</b></div>
+        <div><span>Store</span><b>${esc(r.store || '—')}</b></div>
+        <div><span>Progress</span><b>${esc(p.answered_count || 0)} answer${(p.answered_count || 0) === 1 ? '' : 's'}</b></div>
+        <div><span>Sections</span><b>${codes.length ? codes.map((c) => esc(SECTIONS[c].short)).join(', ') : '—'}</b></div>
+        <div><span>Last saved</span><b>${esc(when)}</b></div>
+      </div>
+      <div class="actions">
+        <button class="btn lg" data-action="session:resume">Resume my session ${icon('arrowR')}</button>
+        <button class="btn ghost" data-action="session:fresh">Start a new person</button>
+      </div>
+      <div class="callout" style="text-align:left;margin-top:22px">${icon('lock')} <b>Shared device?</b> Choose “Start a new person” so the next staff member registers separately. The saved draft stays in the coordinator dashboard.</div>
+    </div>
+    ${foot()}
+  </div>`;
+}
+
+/* ===== already submitted on this device ===== */
+function renderAlready() {
+  const p = state.pendingSession || {};
+  const r = p.respondent || {};
+  const codes = (p.sections || []).filter((c) => SECTIONS[c]);
+  const when = p.submitted_at ? new Date(p.submitted_at).toLocaleString('en-GB') : '—';
+  return `<div class="wrap narrow">
+    <div class="sent-box">
+      <div class="ring">${icon('check')}</div>
+      <h1>Already submitted.</h1>
+      <p>${esc(r.name || 'This device')}, your response${codes.length ? ' for ' + codes.map((c) => esc(SECTIONS[c].short)).join(', ') : ''} was submitted on ${esc(when)}.</p>
+      ${p.serverResponseId ? `<div class="receipt"><div><span>Receipt</span><b>${esc(p.serverResponseId)}</b></div><div><span>Status</span><b>Submitted</b></div></div>` : ''}
+      <div class="actions">
+        <button class="btn" data-action="session:fresh">Start a new response</button>
+      </div>
+      <div class="callout" style="text-align:left;margin-top:22px">${icon('users')} <b>Shared device?</b> Start a new response so the next person can register their own name and answers.</div>
+    </div>
+    ${foot()}
+  </div>`;
+}
+
 /* ===== Part 3: export, share, coordinator, print, events ===== */
+const SESSION_SAVE = { timer: null, saving: false, dirty: false, error: false, savedAt: null };
 function fileBase() {
   const codes = selectedSections();
   return `justrite-questionnaire_${codes.join('-') || 'draft'}_${slug(state.respondent.name)}_${todayISO()}`;
@@ -2176,8 +2276,9 @@ function toggleSection(code, el) {
   else if (state.current === code) state.current = state.selected[0] || null;
   if (el) el.setAttribute('aria-checked', String(state.selected.includes(code)));
   updateSetupSummary();
+  if (state.sessionId) scheduleSessionSave(400);
 }
-function beginSetup() {
+async function beginSetup() {
   const name = (state.respondent.name || '').trim();
   const err = $('#setupErr');
   if (!name || !state.selected.length) {
@@ -2186,14 +2287,22 @@ function beginSetup() {
     if (!name) { const inp = $('[data-r="name"]'); if (inp) inp.focus(); }
     return;
   }
+  if (API_AVAILABLE && !state.sessionId) {
+    const btn = $('[data-action="setup:begin"]');
+    const original = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.innerHTML = 'Starting…'; }
+    await registerSession();
+    if (btn) { btn.disabled = false; btn.innerHTML = original; }
+  }
   if (!state.startedAt) state.startedAt = new Date().toISOString();
   if (!state.signoff.name) state.signoff.name = name;
   if (!state.signoff.role) state.signoff.role = state.respondent.role;
   const chosen = selectedSections();
   state.current = (state.current && chosen.includes(state.current)) ? state.current : chosen[0];
-  state.qIndex = firstUnanswered(state.current);
+  state.qIndex = state.resumed ? state.qIndex : firstUnanswered(state.current);
   state.screen = 'intro';
   render();
+  scheduleSessionSave(600);
 }
 
 /* ===== import ===== */
@@ -2244,6 +2353,230 @@ async function importDraftFile(file) {
   }
 }
 
+/* ===== saved session: registration, autosave, resume ===== */
+function updateSyncPill() {
+  const el = $('#syncPill');
+  if (!el) return;
+  if (!API_AVAILABLE || !state.sessionId) { el.hidden = true; return; }
+  if (state.savedReceipt) { el.hidden = true; return; }
+  el.hidden = false;
+  el.setAttribute('aria-label', SESSION_SAVE.saving ? 'Saving progress' : SESSION_SAVE.error ? 'Server unavailable' : 'Progress saved');
+  el.title = el.getAttribute('aria-label');
+  if (SESSION_SAVE.saving) {
+    el.dataset.state = 'saving';
+    el.innerHTML = '<i></i>Saving…';
+  } else if (SESSION_SAVE.error) {
+    el.dataset.state = 'error';
+    el.innerHTML = '<i></i>Offline';
+  } else if (state.sessionSavedAt) {
+    const t = new Date(state.sessionSavedAt);
+    el.dataset.state = 'saved';
+    el.innerHTML = `<i></i>Saved ${isNaN(t.getTime()) ? '' : t.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
+  } else {
+    el.dataset.state = 'saved';
+    el.innerHTML = '<i></i>Saved';
+  }
+}
+function sessionDraft() {
+  const answers = {};
+  selectedSections().forEach((code) => {
+    SECTIONS[code].questions.forEach((q) => {
+      const a = state.answers[q.id];
+      if (a && hasAnswer(q.id)) {
+        answers[q.id] = {
+          value: Array.isArray(a.value) ? a.value.slice() : (a.value || ''),
+          other: a.other || '',
+          note: a.note || '',
+          marker: a.marker || '',
+          who: a.who || ''
+        };
+      }
+    });
+  });
+  return {
+    respondent: state.respondent,
+    sections: selectedSections(),
+    answers,
+    extras: {
+      documents: state.docs,
+      documentNote: state.docNote,
+      sopOwners: state.sopOwners,
+      raci: { names: state.raci.names, cells: state.raci.cells },
+      table1: state.table1
+    },
+    current: { section: state.current, index: state.qIndex },
+    signoff: state.signoff
+  };
+}
+async function registerSession() {
+  if (!API_AVAILABLE) return false;
+  try {
+    const res = await fetch('/api/sessions', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        respondent: state.respondent,
+        sections: selectedSections(),
+        answers: {},
+        extras: {},
+        current: { section: selectedSections()[0] || '', index: 0 },
+        signoff: Object.assign({}, state.signoff, { name: state.signoff.name || state.respondent.name, confirmed: !!state.signoff.confirmed })
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'Could not start the saved session.');
+    state.sessionId = data.session && data.session.id ? data.session.id : null;
+    state.sessionSavedAt = data.session && data.session.updated_at ? data.session.updated_at : new Date().toISOString();
+    SESSION_SAVE.dirty = false;
+    SESSION_SAVE.error = false;
+    updateSyncPill();
+    if (state.sessionId) toast('Session started. Your progress saves automatically.', 'success');
+    return !!state.sessionId;
+  } catch (err) {
+    toast(err && err.message ? err.message : 'Could not start server saving. You can still continue and download a draft.', 'error');
+    return false;
+  }
+}
+async function saveSession(keepalive) {
+  if (!API_AVAILABLE || !state.sessionId || state.savedReceipt) return false;
+  if (!state.respondent.name || !selectedSections().length) return false;
+  if (SESSION_SAVE.saving) { SESSION_SAVE.dirty = true; updateSyncPill(); return false; }
+  clearTimeout(SESSION_SAVE.timer);
+  SESSION_SAVE.timer = null;
+  const body = JSON.stringify(sessionDraft());
+  SESSION_SAVE.saving = true;
+  SESSION_SAVE.error = false;
+  updateSyncPill();
+  try {
+    const res = await fetch('/api/sessions/current', {
+      method: 'PUT',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body,
+      keepalive: !!keepalive
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.status === 401 || res.status === 409) {
+      state.sessionId = null;
+      SESSION_SAVE.dirty = false;
+      return false;
+    }
+    if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'Could not save progress.');
+    state.sessionSavedAt = data.saved_at || new Date().toISOString();
+    SESSION_SAVE.dirty = false;
+    SESSION_SAVE.error = false;
+    return true;
+  } catch (err) {
+    SESSION_SAVE.error = true;
+    return false;
+  } finally {
+    SESSION_SAVE.saving = false;
+    updateSyncPill();
+    if (SESSION_SAVE.dirty) scheduleSessionSave(900);
+  }
+}
+function scheduleSessionSave(delay) {
+  if (!API_AVAILABLE || !state.sessionId || state.savedReceipt) return;
+  if (['welcome', 'sent', 'saved', 'resume', 'already'].includes(state.screen)) return;
+  SESSION_SAVE.dirty = true;
+  updateSyncPill();
+  clearTimeout(SESSION_SAVE.timer);
+  SESSION_SAVE.timer = setTimeout(() => { saveSession(false); }, delay == null ? 1200 : delay);
+}
+async function checkSession() {
+  if (!API_AVAILABLE || !['welcome', 'setup'].includes(state.screen)) return;
+  if (overallStats().answered > 0) return;
+  try {
+    const res = await fetch('/api/sessions/current', { credentials: 'same-origin', headers: { Accept: 'application/json' }, cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    const session = data && data.session;
+    if (!session) return;
+    state.pendingSession = session;
+    state.screen = session.status === 'submitted' ? 'already' : 'resume';
+    render();
+  } catch (err) {
+  }
+}
+function applyPendingSession() {
+  const p = state.pendingSession;
+  if (!p) return;
+  const blank = blankState();
+  state.respondent = Object.assign(blank.respondent, p.respondent || {});
+  state.selected = (p.sections || []).filter((c) => SECTIONS[c]);
+  state.answers = p.answers || {};
+  const ex = p.extras || {};
+  state.docs = ex.documents || {};
+  state.docNote = ex.documentNote || '';
+  state.sopOwners = ex.sopOwners || {};
+  if (ex.raci) {
+    state.raci.names = Object.assign({}, state.raci.names, ex.raci.names || {});
+    state.raci.cells = Object.assign({}, ex.raci.cells || {});
+  }
+  state.table1 = ex.table1 || {};
+  state.signoff = Object.assign(blank.signoff, p.signoff || {});
+  if (!state.signoff.date) state.signoff.date = todayISO();
+  state.current = p.current && SECTIONS[p.current.section] ? p.current.section : (state.selected[0] || null);
+  state.qIndex = Math.max(0, Math.min(Number(p.current && p.current.index) || 0, state.current ? SECTIONS[state.current].questions.length - 1 : 0));
+  state.sessionId = p.id;
+  state.sessionSavedAt = p.updated_at || new Date().toISOString();
+  state.startedAt = p.created_at || new Date().toISOString();
+  state.resumed = true;
+  state.pendingSession = null;
+  state.teamLink = false;
+  state.screen = 'setup';
+  SESSION_SAVE.dirty = false;
+  SESSION_SAVE.error = false;
+  render();
+  toast('Saved session restored. Your answers are back.', 'success');
+}
+async function closeSession() {
+  try {
+    await fetch('/api/sessions/close', { method: 'POST', credentials: 'same-origin', headers: { Accept: 'application/json' } });
+  } catch (err) {
+  }
+  state.sessionId = null;
+  state.pendingSession = null;
+  state.sessionSavedAt = null;
+  SESSION_SAVE.dirty = false;
+  SESSION_SAVE.error = false;
+  clearTimeout(SESSION_SAVE.timer);
+  SESSION_SAVE.timer = null;
+  updateSyncPill();
+}
+function copyResumeLink() {
+  const input = $('#resumeLink');
+  if (!input) return;
+  const text = input.value;
+  const done = () => toast('Resume link copied.');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else fallbackCopy(text, done);
+}
+async function saveAndShow() {
+  if (state.savedReceipt) {
+    toast('This response is already saved. Use “Submit another response” to start a new one.');
+    return;
+  }
+  if (API_AVAILABLE && state.sessionId) {
+    for (let i = 0; i < 10 && SESSION_SAVE.saving; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    }
+    SESSION_SAVE.dirty = true;
+    const ok = await saveSession(false);
+    if (ok) {
+      const link = location.origin + location.pathname;
+      openModal(`<h3>Progress saved</h3><p>Your answers are saved to your session on the server. This browser will remember the session for 30 days. Reopen the link on this device to continue; for another device, download a copy.</p><label class="modal-label" for="resumeLink">Link for this device</label><input class="modal-input" id="resumeLink" readonly value="${esc(link)}"><div class="row"><button class="btn ghost" data-action="modal:close">Keep answering</button><button class="btn ghost" data-action="session:download">${icon('download')} Download a copy</button><button class="btn" data-action="session:copy">${icon('copy')} Copy link</button></div>`);
+      return;
+    }
+    openModal(`<h3>Could not reach the server</h3><p>Your answers are still in this tab. Download a copy so you can resume later.</p><div class="row"><button class="btn ghost" data-action="modal:close">Close</button><button class="btn" data-action="session:download">${icon('download')} Download draft</button></div>`);
+    return;
+  }
+  downloadDraft();
+  openModal(`<h3>Draft downloaded</h3><p>Keep this file and use “Resume draft” on the form to continue later${API_AVAILABLE ? '' : ' on any device'}.</p><div class="row"><button class="btn" data-action="modal:close">Continue answering</button></div>`);
+}
+
 /* ===== server connection, team links, new respondents ===== */
 async function checkApi() {
   if (!/^https?:$/.test(location.protocol)) return;
@@ -2254,6 +2587,7 @@ async function checkApi() {
     const data = await res.json();
     if (res.ok && data && data.ok) {
       API_AVAILABLE = true;
+      await checkSession();
       if (state.screen === 'review') render();
     }
   } catch (e) {
@@ -2347,7 +2681,8 @@ function askNewRespondent() {
   if (overallStats().answered === 0 && !state.savedReceipt) { resetForNewRespondent(); return; }
   openModal(`<h3>Submit another response?</h3><p>This clears the form for the next staff member.${state.savedReceipt ? ' Your current response is already saved to Dependify.' : ' Any unsaved answers in this tab will be lost.'}</p><div class="row"><button class="btn ghost" data-action="modal:close">Cancel</button><button class="btn" data-action="respondent:new-confirm">Start a new response</button></div>`);
 }
-function resetForNewRespondent() {
+async function resetForNewRespondent() {
+  await closeSession();
   const keepSections = state.selected.slice();
   const keepStore = state.respondent.store;
   const keepTeam = state.teamLink;
@@ -2382,12 +2717,16 @@ function render() {
     case 'review': view.innerHTML = renderReview(); break;
     case 'sent': view.innerHTML = renderSent(); break;
     case 'saved': view.innerHTML = renderSaved(); break;
+    case 'resume': view.innerHTML = renderResume(); break;
+    case 'already': view.innerHTML = renderAlready(); break;
     case 'coordinator': view.innerHTML = renderCoordinator(); break;
     case 'reference': view.innerHTML = renderReference(); break;
     default: view.innerHTML = renderWelcome();
   }
   $$('.q-textarea:not(.q-note)').forEach((el) => autosize(el));
   updateTopProgress();
+  updateSyncPill();
+  if (state.sessionId && !state.savedReceipt) scheduleSessionSave(1500);
   if (state.screen === 'question') {
     const t = $('#q-title');
     if (t) t.focus({ preventScroll: true });
@@ -2426,6 +2765,11 @@ function onClick(e) {
     }
     case 'draft:download': downloadDraft(); break;
     case 'draft:import': { const f = $('#draftFile'); if (f) f.click(); break; }
+    case 'session:save': saveAndShow(); break;
+    case 'session:resume': applyPendingSession(); break;
+    case 'session:fresh': resetForNewRespondent(); break;
+    case 'session:copy': copyResumeLink(); break;
+    case 'session:download': downloadDraft(); break;
     case 'setup:begin': beginSetup(); break;
     case 'section:toggle': toggleSection(el.dataset.code, el); break;
     case 'section:start': {
@@ -2670,6 +3014,7 @@ function onChange(e) {
       else if (mapped && !state.selected.includes(mapped)) hint.textContent = `Suggested section: ${SECTIONS[mapped].name}`;
       else hint.textContent = mapped ? `Suggested section: ${SECTIONS[mapped].name}` : '';
     }
+    if (state.sessionId) scheduleSessionSave(400);
     return;
   }
   if (t.matches('[data-s]')) { state.signoff[t.dataset.s] = t.type === 'checkbox' ? t.checked : t.value; return; }
@@ -2700,6 +3045,12 @@ document.addEventListener('click', onClick);
 document.addEventListener('input', onInput);
 document.addEventListener('change', onChange);
 document.addEventListener('keydown', onKeydown);
+document.addEventListener('input', () => { if (state.sessionId) scheduleSessionSave(); });
+document.addEventListener('change', () => { if (state.sessionId) scheduleSessionSave(); });
+window.addEventListener('pagehide', () => { if (state.sessionId && SESSION_SAVE.dirty) saveSession(true); });
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && state.sessionId && SESSION_SAVE.dirty) saveSession(true);
+});
 window.addEventListener('beforeunload', (e) => {
   if (overallStats().answered > 0 && state.screen !== 'sent' && state.screen !== 'saved') {
     e.preventDefault();

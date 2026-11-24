@@ -64,9 +64,11 @@ Add a **Persistent Storage** volume:
 - Mount path: `/data`
 - Name: anything, e.g. `justrite-questionnaire-data`
 
-The SQLite database is `/data/questionnaire.db`. Without this volume, submissions are lost when the container is redeployed or recreated.
+The SQLite database is `/data/questionnaire.db`. It holds both final submissions and the registered people/autosaved drafts (`sessions` table). Without this volume, both are lost when the container is redeployed or recreated.
 
 The container entrypoint fixes ownership of `/data` and then runs the server as UID/GID `10001`. If Coolify uses a **read-only bind mount**, change it to a writable volume; otherwise the entrypoint logs a warning and the database cannot be written.
+
+Keep the production hostname stable after sharing the link. Resume works by a first-party cookie scoped to the current host; changing domains starts everyone on a fresh session.
 
 A Docker/named volume is simplest and preserves the permissions created in the image.
 

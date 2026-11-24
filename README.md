@@ -16,14 +16,28 @@ Each staff member submits **their own response** to the same section. Nothing is
 
 This is intentionally **separate responses**, not live co-editing of one form. The department working session resolves differences and merges the answers into the agreed SOPs.
 
+## Saved sessions, autosave and resume
+
+Every person who presses **Start** is registered in the server database before they answer:
+
+- A row is written to the `sessions` table with their name, role, store and chosen section(s).
+- The server sets a first-party `HttpOnly`, `SameSite=Lax` session cookie (also `Secure` on HTTPS) that lasts 30 days.
+- Draft answers autosave about a second after typing stops. The top bar shows **Saved 14:32** (a green dot on small phones).
+- **Save & resume** is always in the top bar. On phones, a floating **Save & resume later** pill sits above the question navigation. It flushes the draft immediately and shows a confirmation with the link to reopen on the same device.
+- Reopening the form on the same browser shows **Welcome back** with the saved name, sections, progress and last-saved time. **Resume my session** restores every answer, or **Start a new person** clears the device for the next staff member.
+- A submitted session shows **Already submitted** on reload, with a receipt. **Start a new response** registers the next person.
+- Drafts are also downloadable as JSON for use on another device or as a fallback if cookies are blocked.
+
+The session cookie contains only a random token; answers are never stored in `localStorage` or in readable cookies.
+
 ## Files
 
 | File | Purpose |
 |---|---|
 | `index.html` | The questionnaire. Self-contained; also works as a static download-only form when no server is present. |
-| `server.py` | Dependency-free Python server: static files, submission API, SQLite, admin API, exports, backup. |
+| `server.py` | Dependency-free Python server: static files, registration/session API, submission API, SQLite, admin API, exports, backup. |
 | `entrypoint.py` | Container startup: fixes `/data` ownership, drops to UID 10001, starts the server. |
-| `admin.html` | Coordinator dashboard: token sign-in, stats, side-by-side team view, responses, exports. |
+| `admin.html` | Coordinator dashboard: token sign-in, stats, side-by-side team view, registered people and live drafts, responses, exports. |
 | `meta.json` | Generated question/section metadata used by the server and dashboard. |
 | `Dockerfile` | Image for Coolify / Docker. |
 | `docker-compose.yml` | Local or single-host Compose setup. |
@@ -72,15 +86,18 @@ Full instructions, backups and troubleshooting: **[DEPLOY-COOLIFY.md](./DEPLOY-C
 
 ## How responses are saved
 
+- Pressing **Start** calls `POST /api/sessions`, which registers the person in `sessions` and sets the HttpOnly session cookie. Drafts update through `PUT /api/sessions/current`.
 - `POST /api/responses` validates the response, checks the sign-off, computes priority gaps and stores it in `$DATA_DIR/questionnaire.db`.
+- A successful submission marks the linked session as `submitted`; the session keeps the final answers, receipt and timestamps for the coordinator.
 - Resubmitting the same `responseId` updates the existing record and increments its version instead of creating a duplicate.
 - Multiple staff are separate `responseId`s, so each person appears separately.
-- Nothing is stored in the browser; the form submits to your server.
+- Answers live on the server, not in browser storage. Only a random session token is kept in the first-party HttpOnly cookie.
 
 ## Coordinator dashboard (`/admin`)
 
 - Token sign-in (the token is kept only in that browser tab).
 - Totals: responses, sections covered, priority questions covered by at least one person, last response.
+- **People & sessions:** every registered person, including live drafts that have not been submitted. Open a person to see their status, progress and current answers before they send.
 - **Team view:** choose a section and compare every respondent's answers side by side, with per-question coverage.
 - **Responses:** open a full response, delete it, or download its JSON.
 - **Exports:** combined JSON, long-format CSV for Excel, and a SQLite database backup.
@@ -107,14 +124,14 @@ Full instructions, backups and troubleshooting: **[DEPLOY-COOLIFY.md](./DEPLOY-C
 - The admin API requires `Authorization: Bearer <ADMIN_TOKEN>`; tokens are compared in constant time.
 - Security headers and CSP are set by the server; HTTPS is handled by Coolify.
 - The server accepts only JSON, caps body size, validates sections/questions and requires confirmation.
-- No external scripts, fonts or analytics. No cookies or localStorage in the form.
+- No external scripts, fonts or analytics. The form keeps only a first-party HttpOnly session cookie (random token); answers are not in cookies or localStorage.
 - Data is stored unencrypted in SQLite on the server volume; protect the host, the volume and every backup.
 - Do not collect patient-identifying information; the form tells respondents this.
 - Keep the admin token private and rotate it if it leaks.
 
 ## Static-only use
 
-`index.html` alone still works: each worker downloads a `.json` response and sends it on WhatsApp/email; the browser-side **Coordinator tools** merges files. Without the server, responses are **not** saved centrally. Use this only as a fallback or preview.
+`index.html` alone still works: each worker downloads a `.json` response and sends it on WhatsApp/email; the browser-side **Coordinator tools** merges files. Without the server there is no registration, autosave or resume; **Save & resume** downloads a draft file instead. Use this only as a fallback or preview.
 
 ## Contact details
 

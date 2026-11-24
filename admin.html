@@ -122,6 +122,11 @@ table.team tbody tr.pri:nth-child(even) td.qcell{background:#FFFDF6}
 .resp-metrics b{color:#334641}
 .resp-actions{display:flex;gap:5px;align-items:center}
 .resp-actions .btn{padding:6px 9px;font-size:10.5px}
+.status-pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 7px;font-size:8.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line)}
+.status-pill:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.status-progress{color:#8A5A00;background:var(--amber-bg);border-color:var(--amber-line)}
+.status-submitted{color:#15803D;background:var(--green-bg);border-color:#BFE3CB}
+.status-closed{color:#5B6B67;background:#F1F4F3;border-color:#E2E8E6}
 @media(max-width:900px){
   .tabs{flex-wrap:nowrap;overflow-x:auto;padding-left:14px;padding-right:14px}
   .scroll-hint{display:block}
@@ -214,6 +219,14 @@ table.team tbody tr.pri:nth-child(even) td.qcell{background:#FFFDF6}
       <span class="last-sync" id="lastSync2"></span>
     </div>
 
+    <div class="card" id="peopleCard">
+      <div class="cardhead">
+        <div><p class="eyebrow">Registrations</p><h2>People &amp; sessions</h2><p>Everyone who starts the form is saved here, with their live draft. Use “View” to read a draft before it is submitted.</p></div>
+        <span class="pill grey" id="peopleCount">0</span>
+      </div>
+      <div class="resp-list" id="peopleList"></div>
+    </div>
+
     <div class="card">
       <div class="team-head">
         <div>
@@ -254,7 +267,7 @@ const fmt=(iso)=>{if(!iso)return '—';const d=new Date(iso);return isNaN(d)?iso
 const initials=(s)=>String(s||'').trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
 const MARKER={ 'dont-know':"Don't know",'no-rule':'No rule yet','na':'Not applicable' };
 let MEM_TOKEN='';
-const state={token:'',meta:null,byCode:{},responses:[],section:'',search:'',store:''};
+const state={token:'',meta:null,byCode:{},responses:[],sessions:[],section:'',search:'',store:''};
 function getStoredToken(){try{return sessionStorage.getItem('jr_admin_token')||MEM_TOKEN;}catch(e){return MEM_TOKEN;}}
 function setStoredToken(t){try{sessionStorage.setItem('jr_admin_token',t);}catch(e){MEM_TOKEN=t;}}
 function clearStoredToken(){try{sessionStorage.removeItem('jr_admin_token');}catch(e){}MEM_TOKEN='';}
@@ -278,7 +291,7 @@ function showLogin(message){
   setTimeout(()=>{const inp=$('#tokenInput');if(inp)inp.focus();},50);
 }
 function signOut(message){
-  clearStoredToken(); state.token=''; state.responses=[]; state.meta=null;
+  clearStoredToken(); state.token=''; state.responses=[]; state.sessions=[]; state.meta=null;
   showLogin(message||'');
 }
 function answerText(a){
@@ -310,6 +323,16 @@ function filteredResponses(){
     return hay.indexOf(q)>=0;
   });
 }
+function filteredSessions(){
+  const q=state.search.trim().toLowerCase();
+  return state.sessions.filter(s=>{
+    const d=s.respondent||{};
+    if(state.store && d.store!==state.store)return false;
+    if(!q)return true;
+    const hay=[d.name,d.role,d.store,d.email,d.phone,(s.sections||[]).join(' '),s.status,s.id].join(' ').toLowerCase();
+    return hay.indexOf(q)>=0;
+  });
+}
 function renderStats(){
   const rs=state.responses;
   const covered=new Set();rs.forEach(r=>respSection(r).forEach(c=>covered.add(c)));
@@ -328,6 +351,7 @@ function renderStats(){
 function renderStoreFilter(){
   const sel=$('#storeFilter');const stores={};
   state.responses.forEach(r=>{const s=(r.payload&&r.payload.respondent&&r.payload.respondent.store)||'';if(s)stores[s]=true;});
+  state.sessions.forEach(r=>{const s=(r.respondent&&r.respondent.store)||'';if(s)stores[s]=true;});
   const names=Object.keys(stores).sort();
   sel.innerHTML='<option value="">All stores</option>'+names.map(s=>`<option value="${esc(s)}"${state.store===s?' selected':''}>${esc(s)}</option>`).join('');
 }
@@ -400,6 +424,63 @@ function renderResponses(){
   $$('#responseList [data-open]').forEach(b=>b.addEventListener('click',()=>openResponse(b.dataset.open)));
   $$('#responseList [data-del]').forEach(b=>b.addEventListener('click',()=>confirmDelete(b.dataset.del)));
 }
+function renderPeople(){
+  const ss=filteredSessions();
+  const active=state.sessions.filter(s=>s.status==='active').length;
+  $('#peopleCount').textContent=`${state.sessions.length} registered · ${active} in progress`;
+  const list=$('#peopleList');
+  if(!ss.length){
+    list.innerHTML='<div class="empty"><b>No registered people match this filter.</b>Registrations appear here as soon as someone starts the questionnaire.</div>';
+    return;
+  }
+  list.innerHTML=ss.map(s=>{
+    const d=s.respondent||{};
+    const cls=s.status==='active'?'status-progress':s.status==='submitted'?'status-submitted':'status-closed';
+    const label=s.status==='active'?'In progress':s.status==='submitted'?'Submitted':'Closed';
+    const total=sectionTotal(s.sections||[]);
+    const chips=(s.sections||[]).map(c=>`<span class="chip">${esc(c)}</span>`).join('');
+    const last=s.status==='submitted'&&s.submitted_at?s.submitted_at:s.updated_at;
+    return `<div class="resp-row">
+      <div class="av">${esc(initials(d.name))}</div>
+      <div class="resp-main"><b>${esc(d.name||'Unnamed')}</b><div class="meta">${esc(d.role||'Role not set')}${d.store?' · '+esc(d.store):''} · ${esc(fmt(last))}</div><div class="chips"><span class="status-pill ${cls}">${label}</span>${chips}</div></div>
+      <div class="resp-metrics"><b>${s.answered_count||0}${total?'/'+total:''}</b> answers<br>${s.priority_missing?`<span style="color:#9B2C20">${s.priority_missing} priority open</span>`:'no priority gaps'}<br>${esc((s.id||'').slice(0,8))}</div>
+      <div class="resp-actions"><button class="btn ghost sm" data-session="${esc(s.id)}">${s.status==='submitted'?'Details':'View draft'}</button></div>
+    </div>`;
+  }).join('');
+  $$('#peopleList [data-session]').forEach(b=>b.addEventListener('click',()=>openSessionDetail(b.dataset.session)));
+}
+async function openSessionDetail(id){
+  try{
+    const res=await api('/api/admin/sessions/'+encodeURIComponent(id));
+    const data=await res.json();
+    const s=data.session;if(!s)return;
+    const d=s.respondent||{};
+    const cls=s.status==='active'?'status-progress':s.status==='submitted'?'status-submitted':'status-closed';
+    const label=s.status==='active'?'In progress':s.status==='submitted'?'Submitted':'Closed';
+    const blocks=(s.sections||[]).map((code,idx)=>{
+      const sec=state.byCode[code];if(!sec)return '';
+      const rows=sec.questions.map(q=>{
+        const a=(s.answers||{})[q.id];
+        return `<div class="detail-row"><span class="id">${esc(q.id)}${q.pri?' ★':''}</span><div><div class="q">${esc(q.q)}</div>${a?`<div class="a">${esc(answerText(a))}</div>`:'<div class="none">Not answered</div>'}</div></div>`;
+      }).join('');
+      return `<details class="detail-block" ${idx===0?'open':''}><summary><span>${esc(code)} · ${esc(sec.name)}</span><span style="font-size:10px;color:#7B8A86">${sec.questions.filter(q=>(s.answers||{})[q.id]).length}/${sec.questions.length}</span></summary>${rows}</details>`;
+    }).join('');
+    const linked=state.responses.find(r=>(r.payload&&r.payload.responseId)===s.responseId);
+    openModal(`<h3>${esc(d.name||'Unnamed')}</h3>
+      <p><span class="status-pill ${cls}">${label}</span> ${s.status==='active'?'Live draft — it updates as the person answers.':s.status==='submitted'?'This person has submitted a final response.':'This registration was closed before submission.'}</p>
+      <div class="meta-grid"><span><b>Role</b> ${esc(d.role||'—')}</span><span><b>Store</b> ${esc(d.store||'—')}</span><span><b>Phone</b> ${esc(d.phone||'—')}</span><span><b>Email</b> ${esc(d.email||'—')}</span><span><b>Started</b> ${esc(fmt(s.created_at))}</span><span><b>Last saved</b> ${esc(fmt(s.updated_at))}</span>${s.submitted_at?`<span><b>Submitted</b> ${esc(fmt(s.submitted_at))}</span>`:''}${s.serverResponseId?`<span><b>Receipt</b> ${esc(s.serverResponseId)}</span>`:''}</div>
+      ${blocks||'<p>No answers yet.</p>'}
+      <div class="row"><button class="btn ghost" data-close-btn>Close</button>${linked?`<button class="btn" id="openLinked">Open submitted response</button>`:''}${s.status!=='submitted'?`<button class="btn ghost" id="delSession" style="color:#9B2C20">Delete session</button>`:''}</div>`);
+    $('#modal [data-close-btn]').addEventListener('click',closeModal);
+    const openLinked=$('#openLinked');if(openLinked)openLinked.addEventListener('click',()=>{closeModal();openResponse(linked.id);});
+    const delSession=$('#delSession');if(delSession)delSession.addEventListener('click',()=>{closeModal();confirmDeleteSession(s.id);});
+  }catch(err){toast(err.message,'error');}
+}
+function confirmDeleteSession(id){
+  openModal(`<h3>Delete this session?</h3><p>This removes the registration and its draft. A submitted response is not affected. This cannot be undone.</p><div class="row"><button class="btn ghost" data-close-btn>Cancel</button><button class="btn danger" id="delSessionConfirm">Delete session</button></div>`);
+  $('#modal [data-close-btn]').addEventListener('click',closeModal);
+  $('#delSessionConfirm').addEventListener('click',async()=>{try{await api('/api/admin/sessions/'+encodeURIComponent(id),{method:'DELETE'});toast('Session deleted.');closeModal();await loadData();}catch(err){toast(err.message,'error');}});
+}
 function openModal(html){
   const m=$('#modal');m.hidden=false;m.innerHTML=`<div class="scrim" data-close></div><div class="box" role="dialog" aria-modal="true">${html}</div>`;document.body.style.overflow='hidden';
   const scrim=m.querySelector('[data-close]');if(scrim)scrim.addEventListener('click',closeModal);
@@ -450,14 +531,16 @@ function fallbackCopy(text,done){
   ta.remove();
 }
 function render(){
-  renderStats();renderTabs();renderTeam();renderResponses();renderStoreFilter();
+  renderStats();renderPeople();renderTabs();renderTeam();renderResponses();renderStoreFilter();
   $('#lastSync').textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
   const l2=$('#lastSync2');if(l2)l2.textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
 }
 async function loadData(){
-  const res=await api('/api/admin/responses');
+  const [res,sesRes]=await Promise.all([api('/api/admin/responses'),api('/api/admin/sessions')]);
   const data=await res.json();
+  const sesData=await sesRes.json();
   state.responses=data.responses||[];
+  state.sessions=sesData.sessions||[];
   if(!state.meta){
     const mres=await fetch('/api/meta');state.meta=await mres.json();
     state.byCode={};state.meta.sections.forEach(s=>{state.byCode[s.code]=s;});

@@ -9,6 +9,7 @@ No third-party packages. Python 3.11+.
 from __future__ import annotations
 
 import csv
+import hashlib
 import io
 import json
 import logging
@@ -22,6 +23,7 @@ import time
 import uuid
 from collections import defaultdict, deque
 from datetime import datetime, timezone
+from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import unquote, urlparse
@@ -33,6 +35,8 @@ ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "").strip()
 PORT = int(os.environ.get("PORT", "8000"))
 MAX_BODY = int(os.environ.get("MAX_BODY_BYTES", "2000000"))
 RATE_LIMIT = int(os.environ.get("RATE_LIMIT_PER_MIN", "20"))
+SESSION_COOKIE = "jr_session"
+SESSION_MAX_AGE = 60 * 60 * 24 * 30
 
 if not ADMIN_TOKEN:
     print(
@@ -114,6 +118,32 @@ def init_db() -> None:
                 signed INTEGER NOT NULL DEFAULT 0
             );
             CREATE INDEX IF NOT EXISTS idx_responses_received ON responses(received_at DESC);
+            CREATE TABLE IF NOT EXISTS sessions (
+                id TEXT PRIMARY KEY,
+                token_hash TEXT NOT NULL UNIQUE,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                last_seen_at TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'active',
+                respondent_name TEXT NOT NULL DEFAULT '',
+                respondent_role TEXT NOT NULL DEFAULT '',
+                respondent_store TEXT NOT NULL DEFAULT '',
+                respondent_phone TEXT NOT NULL DEFAULT '',
+                respondent_email TEXT NOT NULL DEFAULT '',
+                respondent_helped_by TEXT NOT NULL DEFAULT '',
+                sections_json TEXT NOT NULL DEFAULT '[]',
+                answers_json TEXT NOT NULL DEFAULT '{}',
+                extras_json TEXT NOT NULL DEFAULT '{}',
+                signoff_json TEXT NOT NULL DEFAULT '{}',
+                current_section TEXT,
+                current_index INTEGER NOT NULL DEFAULT 0,
+                response_id TEXT,
+                server_response_id TEXT,
+                submitted_at TEXT,
+                closed_at TEXT
+            );
+            CREATE INDEX IF NOT EXISTS idx_sessions_updated ON sessions(updated_at DESC);
+            CREATE INDEX IF NOT EXISTS idx_sessions_status ON sessions(status);
             """
         )
     log.info("database ready at %s", DB_PATH)
@@ -343,6 +373,352 @@ def save_response(payload: dict) -> dict:
     }
 
 
+def hash_session_token(token: str) -> str:
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
+def session_priority_missing(sections: list[str], answers: dict) -> int:
+    return sum(
+        1
+        for code in sections
+        for qid in PRIORITY_BY_SECTION.get(code, [])
+        if qid not in answers
+    )
+
+
+def normalize_session(payload) -> dict:
+    if not isinstance(payload, dict):
+        raise ApiError(400, "The session body must be a JSON object.")
+    respondent = payload.get("respondent") if isinstance(payload.get("respondent"), dict) else {}
+    name = clean_str(respondent.get("name"), 200)
+    if not name:
+        raise ApiError(400, "The respondent's name is required.")
+
+    raw_sections = payload.get("sections")
+    if not isinstance(raw_sections, list):
+        raise ApiError(400, "Sections are missing.")
+    sections: list[str] = []
+    for item in raw_sections:
+        code = clean_str(item, 10).upper()
+        if code in SECTION_BY_CODE and code not in sections:
+            sections.append(code)
+    if not sections:
+        raise ApiError(400, "At least one valid section is required.")
+
+    raw_answers = payload.get("answers")
+    if not isinstance(raw_answers, dict):
+        raw_answers = {}
+    answers: dict[str, dict] = {}
+    for qid, answer in raw_answers.items():
+        if not isinstance(qid, str) or qid not in QUESTION_BY_ID:
+            continue
+        if qid.split("-", 1)[0] not in sections or not isinstance(answer, dict):
+            continue
+        value = answer.get("value", "")
+        if isinstance(value, list):
+            value = [clean_str(v, 5000) for v in value[:60] if clean_str(v, 5000)]
+        else:
+            value = clean_str(value, 20000)
+        other = clean_str(answer.get("other"), 2000)
+        note = clean_str(answer.get("note"), 5000)
+        who = clean_str(answer.get("who"), 500)
+        marker = clean_str(answer.get("marker"), 30)
+        if marker not in MARKER_LABELS:
+            marker = ""
+        if not value and not other and not note and not who and not marker:
+            continue
+        answers[qid] = {"value": value, "other": other, "note": note, "who": who, "marker": marker}
+
+    extras = payload.get("extras") if isinstance(payload.get("extras"), dict) else {}
+    current = payload.get("current") if isinstance(payload.get("current"), dict) else {}
+    current_section = clean_str(current.get("section"), 10).upper()
+    if current_section not in sections:
+        current_section = sections[0]
+    try:
+        current_index = max(0, int(current.get("index", 0)))
+    except (TypeError, ValueError):
+        current_index = 0
+    signoff = payload.get("signoff") if isinstance(payload.get("signoff"), dict) else {}
+
+    normalized = {
+        "respondent": {
+            "name": name,
+            "role": clean_str(respondent.get("role"), 200),
+            "store": clean_str(respondent.get("store"), 200),
+            "phone": clean_str(respondent.get("phone"), 100),
+            "email": clean_str(respondent.get("email"), 300),
+            "helpedBy": clean_str(respondent.get("helpedBy"), 500),
+        },
+        "sections": sections,
+        "answers": answers,
+        "extras": extras,
+        "current": {"section": current_section, "index": current_index},
+        "signoff": {
+            "name": clean_str(signoff.get("name"), 200) or name,
+            "role": clean_str(signoff.get("role"), 200) or clean_str(respondent.get("role"), 200),
+            "date": clean_str(signoff.get("date"), 40),
+            "confirmed": bool(signoff.get("confirmed")),
+        },
+    }
+    encoded = json.dumps(normalized, ensure_ascii=False).encode("utf-8")
+    if len(encoded) > MAX_BODY:
+        raise ApiError(413, "The session draft is too large.")
+    return normalized
+
+
+def create_session(data: dict) -> tuple[str, dict]:
+    token = secrets.token_urlsafe(32)
+    token_hash = hash_session_token(token)
+    session_id = uuid.uuid4().hex
+    ts = now_iso()
+    respondent = data["respondent"]
+    with write_lock:
+        conn = connect()
+        try:
+            conn.execute(
+                """
+                INSERT INTO sessions (
+                    id, token_hash, created_at, updated_at, last_seen_at, status,
+                    respondent_name, respondent_role, respondent_store,
+                    respondent_phone, respondent_email, respondent_helped_by,
+                    sections_json, answers_json, extras_json, signoff_json,
+                    current_section, current_index
+                ) VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    session_id,
+                    token_hash,
+                    ts,
+                    ts,
+                    ts,
+                    respondent["name"],
+                    respondent["role"],
+                    respondent["store"],
+                    respondent["phone"],
+                    respondent["email"],
+                    respondent["helpedBy"],
+                    json.dumps(data["sections"], ensure_ascii=False),
+                    json.dumps(data["answers"], ensure_ascii=False),
+                    json.dumps(data["extras"], ensure_ascii=False),
+                    json.dumps(data["signoff"], ensure_ascii=False),
+                    data["current"]["section"],
+                    data["current"]["index"],
+                ),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+    row = find_session_by_id(session_id)
+    return token, row
+
+
+def find_session_by_id(session_id: str):
+    conn = connect()
+    try:
+        row = conn.execute("SELECT * FROM sessions WHERE id = ?", (session_id,)).fetchone()
+    finally:
+        conn.close()
+    return dict(row) if row else None
+
+
+def find_session_by_token(token: str):
+    if not token:
+        return None
+    conn = connect()
+    try:
+        row = conn.execute(
+            "SELECT * FROM sessions WHERE token_hash = ?", (hash_session_token(token),)
+        ).fetchone()
+    finally:
+        conn.close()
+    return dict(row) if row else None
+
+
+def update_session(session_id: str, data: dict) -> dict:
+    respondent = data["respondent"]
+    ts = now_iso()
+    with write_lock:
+        conn = connect()
+        try:
+            row = conn.execute("SELECT status FROM sessions WHERE id = ?", (session_id,)).fetchone()
+            if not row:
+                raise ApiError(404, "Session not found.")
+            if row["status"] != "active":
+                raise ApiError(409, "This session is no longer open.")
+            conn.execute(
+                """
+                UPDATE sessions SET
+                    updated_at = ?, last_seen_at = ?,
+                    respondent_name = ?, respondent_role = ?, respondent_store = ?,
+                    respondent_phone = ?, respondent_email = ?, respondent_helped_by = ?,
+                    sections_json = ?, answers_json = ?, extras_json = ?, signoff_json = ?,
+                    current_section = ?, current_index = ?
+                WHERE id = ?
+                """,
+                (
+                    ts,
+                    ts,
+                    respondent["name"],
+                    respondent["role"],
+                    respondent["store"],
+                    respondent["phone"],
+                    respondent["email"],
+                    respondent["helpedBy"],
+                    json.dumps(data["sections"], ensure_ascii=False),
+                    json.dumps(data["answers"], ensure_ascii=False),
+                    json.dumps(data["extras"], ensure_ascii=False),
+                    json.dumps(data["signoff"], ensure_ascii=False),
+                    data["current"]["section"],
+                    data["current"]["index"],
+                    session_id,
+                ),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+    return find_session_by_id(session_id)
+
+
+def close_session(session_id: str) -> dict | None:
+    ts = now_iso()
+    with write_lock:
+        conn = connect()
+        try:
+            row = conn.execute("SELECT status FROM sessions WHERE id = ?", (session_id,)).fetchone()
+            if not row:
+                return None
+            if row["status"] == "active":
+                conn.execute(
+                    "UPDATE sessions SET status = 'closed', closed_at = ?, updated_at = ?, last_seen_at = ? WHERE id = ?",
+                    (ts, ts, ts, session_id),
+                )
+                conn.commit()
+        finally:
+            conn.close()
+    return find_session_by_id(session_id)
+
+
+def link_session_submission(session_id: str, payload: dict, server_response_id: str) -> None:
+    ts = now_iso()
+    respondent = payload["respondent"]
+    with write_lock:
+        conn = connect()
+        try:
+            row = conn.execute("SELECT status FROM sessions WHERE id = ?", (session_id,)).fetchone()
+            if not row:
+                return
+            conn.execute(
+                """
+                UPDATE sessions SET
+                    status = 'submitted', submitted_at = ?, updated_at = ?, last_seen_at = ?,
+                    respondent_name = ?, respondent_role = ?, respondent_store = ?,
+                    respondent_phone = ?, respondent_email = ?, respondent_helped_by = ?,
+                    sections_json = ?, answers_json = ?, extras_json = ?, signoff_json = ?,
+                    current_section = ?, current_index = ?,
+                    response_id = ?, server_response_id = ?
+                WHERE id = ?
+                """,
+                (
+                    ts,
+                    ts,
+                    ts,
+                    respondent["name"],
+                    respondent["role"],
+                    respondent["store"],
+                    respondent["phone"],
+                    respondent["email"],
+                    respondent.get("helpedBy", ""),
+                    json.dumps(payload["sections"], ensure_ascii=False),
+                    json.dumps(payload["answers"], ensure_ascii=False),
+                    json.dumps(payload.get("extras", {}), ensure_ascii=False),
+                    json.dumps(payload.get("signoff", {}), ensure_ascii=False),
+                    payload["sections"][0] if payload["sections"] else None,
+                    0,
+                    payload.get("responseId", ""),
+                    server_response_id,
+                    session_id,
+                ),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+
+
+def session_summary(row: dict) -> dict:
+    try:
+        sections = json.loads(row["sections_json"] or "[]")
+    except Exception:
+        sections = []
+    try:
+        answers = json.loads(row["answers_json"] or "{}")
+    except Exception:
+        answers = {}
+    try:
+        current = {"section": row["current_section"], "index": row["current_index"]}
+    except Exception:
+        current = {"section": "", "index": 0}
+    return {
+        "id": row["id"],
+        "status": row["status"],
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+        "submitted_at": row["submitted_at"],
+        "closed_at": row["closed_at"],
+        "respondent": {
+            "name": row["respondent_name"],
+            "role": row["respondent_role"],
+            "store": row["respondent_store"],
+            "phone": row["respondent_phone"],
+            "email": row["respondent_email"],
+            "helpedBy": row["respondent_helped_by"],
+        },
+        "sections": sections,
+        "answered_count": len(answers),
+        "priority_missing": session_priority_missing(sections, answers),
+        "current": current,
+        "responseId": row["response_id"],
+        "serverResponseId": row["server_response_id"],
+    }
+
+
+def session_payload(row: dict, include_answers: bool = True) -> dict:
+    data = session_summary(row)
+    if include_answers:
+        try:
+            data["answers"] = json.loads(row["answers_json"] or "{}")
+        except Exception:
+            data["answers"] = {}
+        try:
+            data["extras"] = json.loads(row["extras_json"] or "{}")
+        except Exception:
+            data["extras"] = {}
+        try:
+            data["signoff"] = json.loads(row["signoff_json"] or "{}")
+        except Exception:
+            data["signoff"] = {}
+    return data
+
+
+def list_sessions() -> list[dict]:
+    conn = connect()
+    try:
+        rows = conn.execute("SELECT * FROM sessions ORDER BY updated_at DESC").fetchall()
+    finally:
+        conn.close()
+    return [session_summary(dict(row)) for row in rows]
+
+
+def delete_session(session_id: str) -> bool:
+    with write_lock:
+        conn = connect()
+        try:
+            cur = conn.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
+            conn.commit()
+            return cur.rowcount > 0
+        finally:
+            conn.close()
+
+
 def list_responses() -> list[dict]:
     conn = connect()
     try:
@@ -516,16 +892,51 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Permissions-Policy", "microphone=(self)")
         self.send_header("Content-Security-Policy", CSP)
 
-    def send_json(self, obj, status: int = 200) -> None:
+    def send_json(self, obj, status: int = 200, cookie_token: str | None = None, clear_cookie: bool = False) -> None:
         body = json.dumps(obj, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
+        if cookie_token is not None or clear_cookie:
+            self.send_header("Set-Cookie", self.session_cookie_header(cookie_token, clear_cookie))
         self.base_headers()
         self.end_headers()
         if self.command != "HEAD":
             self.wfile.write(body)
+
+    def session_cookie_header(self, token: str | None, clear: bool = False) -> str:
+        value = "" if clear else (token or "")
+        max_age = 0 if clear else SESSION_MAX_AGE
+        parts = [
+            f"{SESSION_COOKIE}={value}",
+            "Path=/",
+            "HttpOnly",
+            "SameSite=Lax",
+            f"Max-Age={max_age}",
+        ]
+        proto = self.headers.get("X-Forwarded-Proto", "").split(",")[0].strip().lower()
+        if proto == "https" or self.headers.get("X-Forwarded-Ssl", "").lower() == "on":
+            parts.append("Secure")
+        return "; ".join(parts)
+
+    def session_token(self) -> str | None:
+        header = self.headers.get("Cookie", "")
+        if not header:
+            return None
+        try:
+            cookies = SimpleCookie()
+            cookies.load(header)
+            morsel = cookies.get(SESSION_COOKIE)
+            return morsel.value if morsel else None
+        except Exception:
+            return None
+
+    def current_session(self):
+        token = self.session_token()
+        if not token:
+            return None
+        return find_session_by_token(token)
 
     def send_bytes(self, body: bytes, content_type: str, filename: str | None = None) -> None:
         self.send_response(200)
@@ -602,6 +1013,20 @@ class Handler(BaseHTTPRequestHandler):
             except Exception:
                 pass
 
+    def do_PUT(self):
+        try:
+            self.route_put()
+        except ApiError as exc:
+            self.send_json({"detail": exc.detail}, exc.status)
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+        except Exception:
+            log.exception("PUT failed")
+            try:
+                self.send_json({"detail": "Server error"}, 500)
+            except Exception:
+                pass
+
     def do_DELETE(self):
         try:
             self.route_delete()
@@ -637,6 +1062,32 @@ class Handler(BaseHTTPRequestHandler):
             return
         if path == "/api/meta":
             self.send_json(META)
+            return
+        if path == "/api/sessions/current":
+            row = self.current_session()
+            if not row:
+                self.send_json({"session": None})
+            elif row["status"] == "submitted":
+                self.send_json({"session": session_payload(row, include_answers=False)})
+            elif row["status"] == "active":
+                self.send_json({"session": session_payload(row, include_answers=True)})
+            else:
+                self.send_json({"session": None}, clear_cookie=True)
+            return
+        if path == "/api/admin/sessions":
+            self.require_admin()
+            sessions = list_sessions()
+            self.send_json({"ok": True, "count": len(sessions), "sessions": sessions})
+            return
+        if path.startswith("/api/admin/sessions/"):
+            self.require_admin()
+            session_id = unquote(path[len("/api/admin/sessions/"):]).strip()
+            if not session_id or "/" in session_id:
+                raise ApiError(400, "Invalid session id.")
+            row = find_session_by_id(session_id)
+            if not row:
+                raise ApiError(404, "Session not found.")
+            self.send_json({"ok": True, "session": session_payload(row, include_answers=True)})
             return
         if path == "/api/admin/responses":
             self.require_admin()
@@ -700,15 +1151,46 @@ class Handler(BaseHTTPRequestHandler):
 
     def route_post(self):
         path = urlparse(self.path).path
-        if path != "/api/responses":
-            raise ApiError(404, "Not found")
         forwarded = self.headers.get("X-Forwarded-For", "")
         client_ip = forwarded.split(",")[0].strip() if forwarded else (self.client_address[0] if self.client_address else "unknown")
+
+        if path == "/api/sessions":
+            if not allow_post(client_ip):
+                raise ApiError(429, "Too many registrations. Try again in a minute.")
+            payload = self.read_json()
+            data = normalize_session(payload)
+            old = self.current_session()
+            if old and old["status"] == "active":
+                close_session(old["id"])
+            token, row = create_session(data)
+            log.info("registered respondent %s (%s) for %s", row["id"], data["respondent"]["name"], ", ".join(data["sections"]))
+            self.send_json(
+                {"ok": True, "session": session_payload(row, include_answers=True)},
+                cookie_token=token,
+            )
+            return
+
+        if path == "/api/sessions/close":
+            row = self.current_session()
+            if row:
+                close_session(row["id"])
+                log.info("closed session %s", row["id"])
+            self.send_json({"ok": True}, clear_cookie=True)
+            return
+
+        if path != "/api/responses":
+            raise ApiError(404, "Not found")
         if not allow_post(client_ip):
             raise ApiError(429, "Too many submissions. Try again in a minute.")
         payload = self.read_json()
         normalized = validate_payload(payload)
         result = save_response(normalized)
+        session = self.current_session()
+        if session and session["status"] == "active":
+            try:
+                link_session_submission(session["id"], normalized, result["id"])
+            except Exception:
+                log.exception("could not link session %s to response %s", session["id"], result["id"])
         log.info(
             "saved response %s (%s) for %s — %s answered, %s priority open",
             result["id"],
@@ -719,8 +1201,39 @@ class Handler(BaseHTTPRequestHandler):
         )
         self.send_json(result)
 
+    def route_put(self):
+        path = urlparse(self.path).path
+        if path != "/api/sessions/current":
+            raise ApiError(404, "Not found")
+        payload = self.read_json()
+        row = self.current_session()
+        if not row:
+            raise ApiError(401, "No saved session. Register first.")
+        if row["status"] != "active":
+            raise ApiError(409, "This session is no longer open.")
+        data = normalize_session(payload)
+        updated = update_session(row["id"], data)
+        self.send_json(
+            {
+                "ok": True,
+                "saved_at": updated["updated_at"],
+                "session": session_summary(updated),
+            }
+        )
+
     def route_delete(self):
         path = urlparse(self.path).path
+        sessions_prefix = "/api/admin/sessions/"
+        if path.startswith(sessions_prefix):
+            self.require_admin()
+            session_id = unquote(path[len(sessions_prefix):]).strip()
+            if not session_id or "/" in session_id:
+                raise ApiError(400, "Invalid session id.")
+            if not delete_session(session_id):
+                raise ApiError(404, "Session not found.")
+            log.info("deleted session %s", session_id)
+            self.send_json({"ok": True, "deleted": session_id})
+            return
         prefix = "/api/admin/responses/"
         if not path.startswith(prefix):
             raise ApiError(404, "Not found")
