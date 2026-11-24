@@ -1,0 +1,17 @@
+services:
+  questionnaire:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      ADMIN_TOKEN: ${ADMIN_TOKEN:?Set ADMIN_TOKEN in .env}
+      DATA_DIR: /data
+      PORT: "8000"
+      MAX_BODY_BYTES: "2000000"
+      RATE_LIMIT_PER_MIN: "20"
+    volumes:
+      - questionnaire-data:/data
+    restart: unless-stopped
+
+volumes:
+  questionnaire-data:

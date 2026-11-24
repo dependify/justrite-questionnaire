@@ -1,0 +1,2016 @@
+{
+  "app": "Justrite Stakeholder Questionnaire",
+  "version": 1,
+  "totals": {
+    "sections": 12,
+    "questions": 251,
+    "priority": 40,
+    "sops": 24,
+    "stores": 14
+  },
+  "sections": [
+    {
+      "code": "OWN",
+      "name": "Owner and executive team",
+      "short": "Owner",
+      "who": "Owner / Managing Director and any directors",
+      "color": "#0E6B64",
+      "groups": [
+        {
+          "title": "Direction and success",
+          "questions": [
+            "OWN-01",
+            "OWN-02",
+            "OWN-03"
+          ]
+        },
+        {
+          "title": "Decision rights and approvals",
+          "questions": [
+            "OWN-04",
+            "OWN-05"
+          ]
+        },
+        {
+          "title": "Brand, voice and language",
+          "questions": [
+            "OWN-06",
+            "OWN-07",
+            "OWN-08"
+          ]
+        },
+        {
+          "title": "LinkedIn and public presence",
+          "questions": [
+            "OWN-09",
+            "OWN-10",
+            "OWN-11",
+            "OWN-12",
+            "OWN-13"
+          ]
+        },
+        {
+          "title": "Partners, offers and authenticity",
+          "questions": [
+            "OWN-14",
+            "OWN-15",
+            "OWN-16",
+            "OWN-17"
+          ]
+        },
+        {
+          "title": "Data, AI and public promises",
+          "questions": [
+            "OWN-18",
+            "OWN-19",
+            "OWN-20"
+          ]
+        },
+        {
+          "title": "Growth, history and risk",
+          "questions": [
+            "OWN-21",
+            "OWN-22",
+            "OWN-23",
+            "OWN-24"
+          ]
+        },
+        {
+          "title": "Working with you",
+          "questions": [
+            "OWN-25"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "OWN-01",
+          "q": "In one sentence, what must the website and app achieve for Justrite in the next 12 months?",
+          "pri": true
+        },
+        {
+          "id": "OWN-02",
+          "q": "What are the three metrics you will check weekly to know it is working?",
+          "pri": true
+        },
+        {
+          "id": "OWN-03",
+          "q": "Which functions go live first and which wait?",
+          "pri": true
+        },
+        {
+          "id": "OWN-04",
+          "q": "Who has the final say on: prices, delivery fees, discounts, refunds, product range, and pausing the online channel?",
+          "pri": false
+        },
+        {
+          "id": "OWN-05",
+          "q": "What spending or commitment limits apply for each approver, and who covers when you are away?",
+          "pri": false
+        },
+        {
+          "id": "OWN-06",
+          "q": "How do you describe Justrite in your own words: the promise, the customers, what makes it different from HealthPlus, Medplus and other chains?",
+          "pri": false
+        },
+        {
+          "id": "OWN-07",
+          "q": "Which words, claims and tones must never appear in our content?",
+          "pri": false
+        },
+        {
+          "id": "OWN-08",
+          "q": "Do you want content in English only, or also Pidgin, Yoruba or Hausa?",
+          "pri": false
+        },
+        {
+          "id": "OWN-09",
+          "q": "Are you willing to have a public LinkedIn profile and be the face of the company? What topics are off limits?",
+          "pri": true
+        },
+        {
+          "id": "OWN-10",
+          "q": "Who should be the third LinkedIn profile (we suggest the Superintendent Pharmacist)? Has that person agreed?",
+          "pri": false
+        },
+        {
+          "id": "OWN-11",
+          "q": "Do you already have a LinkedIn profile or company page? Who owns the company page today? Please give the links.",
+          "pri": false
+        },
+        {
+          "id": "OWN-12",
+          "q": "May we use staff names, photos, and licence numbers publicly? Which ones, with what written consent?",
+          "pri": false
+        },
+        {
+          "id": "OWN-13",
+          "q": "Who approves each content type before publishing?",
+          "pri": false
+        },
+        {
+          "id": "OWN-14",
+          "q": "Which regulators or associations are you a member of or want to be seen with?",
+          "pri": false
+        },
+        {
+          "id": "OWN-15",
+          "q": "Which hospitals, HMOs, employers, suppliers or manufacturers are formal partners we may name publicly?",
+          "pri": false
+        },
+        {
+          "id": "OWN-16",
+          "q": "What is your policy on discounts, loyalty points, free delivery thresholds, price matching and price locks?",
+          "pri": false
+        },
+        {
+          "id": "OWN-17",
+          "q": "Who is responsible for answering the question \"is this product genuine?\" and what proof will you show?",
+          "pri": false
+        },
+        {
+          "id": "OWN-18",
+          "q": "Do you allow AI crawlers and AI assistants to read the website?",
+          "pri": false
+        },
+        {
+          "id": "OWN-19",
+          "q": "How much of the pharmacy's patient data may we use, in aggregated and anonymous form, for content and press? Under what safeguards?",
+          "pri": false
+        },
+        {
+          "id": "OWN-20",
+          "q": "What is your appetite for public pricing and published promises (delivery fee, delivery time, refund rule)? What would make you withdraw one?",
+          "pri": false
+        },
+        {
+          "id": "OWN-21",
+          "q": "What are your expansion plans for the next 24 months (new stores, states, services) that the website and app must be ready for?",
+          "pri": false
+        },
+        {
+          "id": "OWN-22",
+          "q": "What previous marketing, agency or website work should we know about, including what failed?",
+          "pri": false
+        },
+        {
+          "id": "OWN-23",
+          "q": "Who are the three competitors that worry you most, online or offline?",
+          "pri": false
+        },
+        {
+          "id": "OWN-24",
+          "q": "What would make you stop or pause this programme?",
+          "pri": false
+        },
+        {
+          "id": "OWN-25",
+          "q": "What is the best way and time to reach you for approvals, and who may approve on your behalf?",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "PHM",
+      "name": "Superintendent pharmacist and pharmacists",
+      "short": "Pharmacists",
+      "who": "Superintendent Pharmacist, store pharmacists, reviewing pharmacists",
+      "color": "#15803D",
+      "groups": [
+        {
+          "title": "Online sale rules",
+          "questions": [
+            "PHM-01",
+            "PHM-02"
+          ]
+        },
+        {
+          "title": "Prescriptions: validity and refills",
+          "questions": [
+            "PHM-03",
+            "PHM-04",
+            "PHM-05"
+          ]
+        },
+        {
+          "title": "Review operations",
+          "questions": [
+            "PHM-06",
+            "PHM-07",
+            "PHM-08",
+            "PHM-09",
+            "PHM-10"
+          ]
+        },
+        {
+          "title": "Substitution and safety checks",
+          "questions": [
+            "PHM-11",
+            "PHM-12"
+          ]
+        },
+        {
+          "title": "Safety rules for content and tools",
+          "questions": [
+            "PHM-13",
+            "PHM-14",
+            "PHM-15"
+          ]
+        },
+        {
+          "title": "Claims, reviewers and sources",
+          "questions": [
+            "PHM-16",
+            "PHM-17",
+            "PHM-18",
+            "PHM-19",
+            "PHM-20"
+          ]
+        },
+        {
+          "title": "Adverse events, recalls and stock rules",
+          "questions": [
+            "PHM-21",
+            "PHM-22",
+            "PHM-23",
+            "PHM-24",
+            "PHM-25"
+          ]
+        },
+        {
+          "title": "e-Pharmacy and inspections",
+          "questions": [
+            "PHM-26",
+            "PHM-27"
+          ]
+        },
+        {
+          "title": "Data, disclaimers and consultations",
+          "questions": [
+            "PHM-28",
+            "PHM-29",
+            "PHM-30"
+          ]
+        },
+        {
+          "title": "Named pharmacist and customer questions",
+          "questions": [
+            "PHM-31",
+            "PHM-32",
+            "PHM-33",
+            "PHM-34"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "PHM-01",
+          "q": "Which medicines may be sold online without a prescription, which only with a reviewed prescription, and which never online? Please share the list or the rule.",
+          "pri": true
+        },
+        {
+          "id": "PHM-02",
+          "q": "How do you classify controlled, restricted and schedule drugs for online and store sales? What documents are required?",
+          "pri": true
+        },
+        {
+          "id": "PHM-03",
+          "q": "What counts as a valid prescription (handwritten, printed, e-prescription, hospital letter)? What details must be present?",
+          "pri": false
+        },
+        {
+          "id": "PHM-04",
+          "q": "Maximum age of a prescription before it needs renewing, by drug type?",
+          "pri": false
+        },
+        {
+          "id": "PHM-05",
+          "q": "Can a prescription be refilled? How many times, how often, and what proof is needed at each refill?",
+          "pri": false
+        },
+        {
+          "id": "PHM-06",
+          "q": "What is the target turnaround for prescription review during opening hours and outside them?",
+          "pri": true
+        },
+        {
+          "id": "PHM-07",
+          "q": "What are the rules for approving, asking for clarification, rejecting, and contacting the prescriber? Please give the steps in order.",
+          "pri": false
+        },
+        {
+          "id": "PHM-08",
+          "q": "What note must the pharmacist record with each decision, and for how long are records kept?",
+          "pri": false
+        },
+        {
+          "id": "PHM-09",
+          "q": "Who covers prescription review when the pharmacist is off, on leave or in a different store? Is cross-store review allowed?",
+          "pri": false
+        },
+        {
+          "id": "PHM-10",
+          "q": "How many pharmacists are available for review, and at which hours? Is there a pharmacist at every store at all opening hours?",
+          "pri": false
+        },
+        {
+          "id": "PHM-11",
+          "q": "When is generic substitution allowed, who decides, and how is the customer told?",
+          "pri": false
+        },
+        {
+          "id": "PHM-12",
+          "q": "Which drug-interaction, allergy and dose-limit checks must happen before dispensing? What do you do when the symptom checker or interaction checker disagrees with your judgement?",
+          "pri": false
+        },
+        {
+          "id": "PHM-13",
+          "q": "Which red-flag symptoms must always send the customer to a doctor or emergency care? Please supply the list we should show on every health tool and article.",
+          "pri": true
+        },
+        {
+          "id": "PHM-14",
+          "q": "Which groups need extra care in content and in the app? (children, pregnancy, elderly, kidney or liver disease)",
+          "pri": false
+        },
+        {
+          "id": "PHM-15",
+          "q": "How should antibiotics, antimalarials, steroids, and pain medicines be handled in content, search and recommendations?",
+          "pri": false
+        },
+        {
+          "id": "PHM-16",
+          "q": "Which health claims may we make, and which are forbidden (cure, prevent, guaranteed, best)?",
+          "pri": false
+        },
+        {
+          "id": "PHM-17",
+          "q": "Who will review every health article, tool page, FAQ and carousel? Names, credentials, PCN numbers, backup reviewer.",
+          "pri": true
+        },
+        {
+          "id": "PHM-18",
+          "q": "How long can you take to review a piece of content, and how many pieces per week can you realistically review?",
+          "pri": false
+        },
+        {
+          "id": "PHM-19",
+          "q": "Which sources do you accept as authoritative?",
+          "pri": false
+        },
+        {
+          "id": "PHM-20",
+          "q": "How often should health content be re-reviewed? Which content is high-risk and needs shorter cycles?",
+          "pri": false
+        },
+        {
+          "id": "PHM-21",
+          "q": "How are adverse events, side effects, wrong medicine, wrong dose and complaints reported, recorded and escalated? Who reports to NAFDAC?",
+          "pri": false
+        },
+        {
+          "id": "PHM-22",
+          "q": "How is a recall or counterfeit alert handled today, step by step? What must the app do (freeze batch, list customers, message them)?",
+          "pri": true
+        },
+        {
+          "id": "PHM-23",
+          "q": "Which batch, expiry and storage details must be recorded at receiving and at dispensing?",
+          "pri": false
+        },
+        {
+          "id": "PHM-24",
+          "q": "What is your minimum remaining shelf-life rule at sale and for delivery?",
+          "pri": false
+        },
+        {
+          "id": "PHM-25",
+          "q": "Which medicines need cold-chain or special storage and delivery, and should they be excluded from online delivery?",
+          "pri": false
+        },
+        {
+          "id": "PHM-26",
+          "q": "What is the status of the Electronic Pharmacy / e-pharmacy registration for Justrite, who leads it, and what is the timeline?",
+          "pri": true
+        },
+        {
+          "id": "PHM-27",
+          "q": "What do you need from the website and app to satisfy an inspection (records, exports, audit trails)? Please give an example of a past inspection request.",
+          "pri": false
+        },
+        {
+          "id": "PHM-28",
+          "q": "May the pharmacist see health data of customers? Which roles may see which data, and what reason must be logged?",
+          "pri": false
+        },
+        {
+          "id": "PHM-29",
+          "q": "What disclaimers do you require on tools, articles and consultations?",
+          "pri": false
+        },
+        {
+          "id": "PHM-30",
+          "q": "How should free pharmacist consultation requests be triaged, answered and documented? Channels, hours, limits, escalation to a doctor?",
+          "pri": false
+        },
+        {
+          "id": "PHM-31",
+          "q": "Do you consent to be named and photographed as the reviewing pharmacist on the website and on LinkedIn? What details may be shown?",
+          "pri": false
+        },
+        {
+          "id": "PHM-32",
+          "q": "What pharmacist posts or comments on LinkedIn would you be comfortable with, and what is off limits (individual advice, product promotion)?",
+          "pri": false
+        },
+        {
+          "id": "PHM-33",
+          "q": "What questions do customers ask you most often? Please list the top 20, with the answer you give.",
+          "pri": false
+        },
+        {
+          "id": "PHM-34",
+          "q": "What is the most common mistake or complaint you want the website to prevent?",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "ITD",
+      "name": "IT and technology",
+      "short": "IT",
+      "who": "IT lead / Head of IT / current web or hosting provider",
+      "color": "#4F46E5",
+      "groups": [
+        {
+          "title": "Domain, hosting and email",
+          "questions": [
+            "ITD-01",
+            "ITD-02",
+            "ITD-03",
+            "ITD-04"
+          ]
+        },
+        {
+          "title": "Search, analytics and social accounts",
+          "questions": [
+            "ITD-05",
+            "ITD-06",
+            "ITD-07"
+          ]
+        },
+        {
+          "title": "Platform hosting and cut-over",
+          "questions": [
+            "ITD-08",
+            "ITD-09",
+            "ITD-10"
+          ]
+        },
+        {
+          "title": "Integrations and payments",
+          "questions": [
+            "ITD-11",
+            "ITD-12",
+            "ITD-13",
+            "ITD-14",
+            "ITD-15"
+          ]
+        },
+        {
+          "title": "Accounts, devices and data storage",
+          "questions": [
+            "ITD-16",
+            "ITD-17",
+            "ITD-18"
+          ]
+        },
+        {
+          "title": "Data protection, backups and incidents",
+          "questions": [
+            "ITD-19",
+            "ITD-20",
+            "ITD-21"
+          ]
+        },
+        {
+          "title": "Store technology and resilience",
+          "questions": [
+            "ITD-22",
+            "ITD-23",
+            "ITD-24",
+            "ITD-25"
+          ]
+        },
+        {
+          "title": "Policies, audits and support",
+          "questions": [
+            "ITD-26",
+            "ITD-27",
+            "ITD-28"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "ITD-01",
+          "q": "Who owns the domain justritepharmacy.com and where is it registered? Who holds the registrar login and the DNS?",
+          "pri": true
+        },
+        {
+          "id": "ITD-02",
+          "q": "When does the domain renew and is it set to auto-renew? Is registrar lock on?",
+          "pri": false
+        },
+        {
+          "id": "ITD-03",
+          "q": "Where is the current WordPress site hosted, who administers it, and can we get a full backup and an admin login?",
+          "pri": false
+        },
+        {
+          "id": "ITD-04",
+          "q": "Which email addresses use the domain (for example onlinesales@)? Where is email hosted, and what must not break at cut-over?",
+          "pri": false
+        },
+        {
+          "id": "ITD-05",
+          "q": "Are Google Search Console, Bing Webmaster Tools, Google Analytics and Google Tag Manager set up for the domain? Who is the owner of each?",
+          "pri": true
+        },
+        {
+          "id": "ITD-06",
+          "q": "Do you have analytics history for the last 16 months we can export?",
+          "pri": false
+        },
+        {
+          "id": "ITD-07",
+          "q": "Who owns the Google Business Profiles, Facebook page, Instagram, YouTube and any LinkedIn page? Whose email is the account owner? Is two-step verification on?",
+          "pri": false
+        },
+        {
+          "id": "ITD-08",
+          "q": "Where will the new platform be hosted (your own server, a cloud provider, container)? Who administers it and what are the uptime expectations?",
+          "pri": false
+        },
+        {
+          "id": "ITD-09",
+          "q": "Who is the technical contact available at cut-over and for the 14 days after it? Out-of-hours contact?",
+          "pri": false
+        },
+        {
+          "id": "ITD-10",
+          "q": "What is the acceptable downtime window for the DNS switch, and which day and time is best?",
+          "pri": false
+        },
+        {
+          "id": "ITD-11",
+          "q": "Which systems must the website and app connect to?",
+          "pri": true
+        },
+        {
+          "id": "ITD-12",
+          "q": "What POS or inventory system do the 14 stores use? Can it export products, prices, stock, batches and expiry? In what format and how often?",
+          "pri": false
+        },
+        {
+          "id": "ITD-13",
+          "q": "Which payment accounts exist (Paystack, bank accounts, POS terminals)? Who holds the keys, and who may rotate them?",
+          "pri": false
+        },
+        {
+          "id": "ITD-14",
+          "q": "Who owns the WhatsApp Business number and account? Is it verified? Which number should customers see?",
+          "pri": false
+        },
+        {
+          "id": "ITD-15",
+          "q": "Which SMS sender ID and provider do you use or plan to use?",
+          "pri": false
+        },
+        {
+          "id": "ITD-16",
+          "q": "How are staff accounts created, changed and removed today? Who approves access to prescriptions, customer data, refunds and prices?",
+          "pri": false
+        },
+        {
+          "id": "ITD-17",
+          "q": "What password, two-step verification and device rules should staff follow? Are shared logins used anywhere today?",
+          "pri": true
+        },
+        {
+          "id": "ITD-18",
+          "q": "How is customer and prescription data stored, who can export it, and where must it stay (country, provider)?",
+          "pri": false
+        },
+        {
+          "id": "ITD-19",
+          "q": "Is there a Data Protection Officer or equivalent? Is Justrite registered with the Nigeria Data Protection Commission, and what does the privacy policy currently say?",
+          "pri": true
+        },
+        {
+          "id": "ITD-20",
+          "q": "How often are backups taken for the website, database and uploaded prescription images? Where are they kept, and when was a restore last tested?",
+          "pri": false
+        },
+        {
+          "id": "ITD-21",
+          "q": "What is your incident process for a data breach, an outage, or a defaced page? Who is called in what order?",
+          "pri": false
+        },
+        {
+          "id": "ITD-22",
+          "q": "What internet connection, devices (PC, tablet, phone), printers and barcode scanners does each store have? Are there stores with unreliable power or data?",
+          "pri": false
+        },
+        {
+          "id": "ITD-23",
+          "q": "What is the process when the internet is down in a store? Can staff continue to serve customers manually and reconcile later?",
+          "pri": false
+        },
+        {
+          "id": "ITD-24",
+          "q": "What monitoring do you want (uptime, errors, slow pages) and who receives alerts?",
+          "pri": false
+        },
+        {
+          "id": "ITD-25",
+          "q": "Which third-party scripts or plug-ins do you want to keep, and which should be dropped?",
+          "pri": false
+        },
+        {
+          "id": "ITD-26",
+          "q": "What are your policies on staff using personal phones and WhatsApp for customer data?",
+          "pri": false
+        },
+        {
+          "id": "ITD-27",
+          "q": "Are there any security audits, penetration tests or compliance reviews we should take into account?",
+          "pri": false
+        },
+        {
+          "id": "ITD-28",
+          "q": "What internal IT support hours and response expectations will staff and managers have after launch?",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "STO",
+      "name": "Store managers and store teams",
+      "short": "Stores",
+      "who": "Each of the 14 store managers, plus one associate and one pharmacist per store",
+      "color": "#EA580C",
+      "groups": [
+        {
+          "title": "Store identity and services",
+          "questions": [
+            "STO-01",
+            "STO-02",
+            "STO-03",
+            "STO-04"
+          ]
+        },
+        {
+          "title": "Staffing and rhythm",
+          "questions": [
+            "STO-05",
+            "STO-06",
+            "STO-07"
+          ]
+        },
+        {
+          "title": "Online orders and fulfilment",
+          "questions": [
+            "STO-08",
+            "STO-09",
+            "STO-10"
+          ]
+        },
+        {
+          "title": "Shelves, batches and counts",
+          "questions": [
+            "STO-11",
+            "STO-12",
+            "STO-13"
+          ]
+        },
+        {
+          "title": "Stock, pickup and order status",
+          "questions": [
+            "STO-14",
+            "STO-15",
+            "STO-16"
+          ]
+        },
+        {
+          "title": "Local directions, competitors and community",
+          "questions": [
+            "STO-17",
+            "STO-18",
+            "STO-19"
+          ]
+        },
+        {
+          "title": "Photos, expectations and reviews",
+          "questions": [
+            "STO-20",
+            "STO-21",
+            "STO-22"
+          ]
+        },
+        {
+          "title": "Payments and training",
+          "questions": [
+            "STO-23",
+            "STO-24",
+            "STO-25"
+          ]
+        },
+        {
+          "title": "Friction check",
+          "questions": [
+            "STO-26"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "STO-01",
+          "q": "Store name, full address, the phone number customers should call, and the WhatsApp number (if different).",
+          "pri": true
+        },
+        {
+          "id": "STO-02",
+          "q": "Exact opening hours for each day, public holidays, and any 24-hour service.",
+          "pri": true
+        },
+        {
+          "id": "STO-03",
+          "q": "Services offered in the store today.",
+          "pri": false
+        },
+        {
+          "id": "STO-04",
+          "q": "Which of these are free and which are paid?",
+          "pri": false
+        },
+        {
+          "id": "STO-05",
+          "q": "Is there a private area for consultation? Is there a pharmacist on duty at every opening hour?",
+          "pri": false
+        },
+        {
+          "id": "STO-06",
+          "q": "How many staff work in each shift?",
+          "pri": false
+        },
+        {
+          "id": "STO-07",
+          "q": "What are the busiest days and times? What is the slowest period?",
+          "pri": false
+        },
+        {
+          "id": "STO-08",
+          "q": "Who will check the online orders queue in this store, how often, and who covers if they are busy or off?",
+          "pri": true
+        },
+        {
+          "id": "STO-09",
+          "q": "How do you receive orders now (phone, WhatsApp, walk-in)? How are they recorded?",
+          "pri": false
+        },
+        {
+          "id": "STO-10",
+          "q": "How long does it take to pick and pack an average order today? What slows it down?",
+          "pri": false
+        },
+        {
+          "id": "STO-11",
+          "q": "How are products arranged on shelves? Do you use shelf or bin codes the app should show?",
+          "pri": false
+        },
+        {
+          "id": "STO-12",
+          "q": "How do you currently handle expiry dates and batch numbers when selling? Who checks them and when?",
+          "pri": false
+        },
+        {
+          "id": "STO-13",
+          "q": "How often do you count stock and how do you record differences?",
+          "pri": false
+        },
+        {
+          "id": "STO-14",
+          "q": "What do you do when a product is out of stock or a customer asks for an item you do not carry? Will you transfer from another store?",
+          "pri": false
+        },
+        {
+          "id": "STO-15",
+          "q": "Is pickup in the store offered? What identification does the customer show and who hands over?",
+          "pri": false
+        },
+        {
+          "id": "STO-16",
+          "q": "What happens when a customer calls to ask where their order is? Who answers and what system do they use?",
+          "pri": false
+        },
+        {
+          "id": "STO-17",
+          "q": "Which local landmarks, bus stops and directions help customers find you? Is there parking or accessibility information?",
+          "pri": false
+        },
+        {
+          "id": "STO-18",
+          "q": "Which local competitors are within 2 km, and what do customers say about them?",
+          "pri": true
+        },
+        {
+          "id": "STO-19",
+          "q": "Which community groups, churches, mosques, schools, clinics or employers near the store could host a health screening or partnership?",
+          "pri": false
+        },
+        {
+          "id": "STO-20",
+          "q": "Can we photograph the shopfront, interior and team (with consent)? Who arranges it and when?",
+          "pri": false
+        },
+        {
+          "id": "STO-21",
+          "q": "What do you want customers to say after visiting? What do they complain about most today?",
+          "pri": false
+        },
+        {
+          "id": "STO-22",
+          "q": "How are online customer reviews and Google messages handled today for this store?",
+          "pri": false
+        },
+        {
+          "id": "STO-23",
+          "q": "How do customers pay in store? Which methods and POS terminals?",
+          "pri": false
+        },
+        {
+          "id": "STO-24",
+          "q": "Who counts and banks the pay-on-delivery cash and how is it reconciled at shift end?",
+          "pri": false
+        },
+        {
+          "id": "STO-25",
+          "q": "What training have staff had on computers, tablets or apps? Who in the store is the best champion for the new system?",
+          "pri": false
+        },
+        {
+          "id": "STO-26",
+          "q": "What would make you not use the system on a busy day? Please be honest.",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "PRO",
+      "name": "Procurement, inventory and supply chain",
+      "short": "Procurement",
+      "who": "Head of procurement, inventory controller, central warehouse if any",
+      "color": "#7C3AED",
+      "groups": [
+        {
+          "title": "Master data and range",
+          "questions": [
+            "PRO-01",
+            "PRO-02",
+            "PRO-03",
+            "PRO-04"
+          ]
+        },
+        {
+          "title": "Photographs, pricing and price locks",
+          "questions": [
+            "PRO-05",
+            "PRO-06",
+            "PRO-07",
+            "PRO-08"
+          ]
+        },
+        {
+          "title": "Suppliers, receiving and expiry",
+          "questions": [
+            "PRO-09",
+            "PRO-10",
+            "PRO-11",
+            "PRO-12"
+          ]
+        },
+        {
+          "title": "Replenishment, stockouts and transfers",
+          "questions": [
+            "PRO-13",
+            "PRO-14",
+            "PRO-15"
+          ]
+        },
+        {
+          "title": "Recall, returns and online exclusions",
+          "questions": [
+            "PRO-16",
+            "PRO-17",
+            "PRO-18"
+          ]
+        },
+        {
+          "title": "Fulfilment hubs, accuracy and reporting",
+          "questions": [
+            "PRO-19",
+            "PRO-20",
+            "PRO-21",
+            "PRO-22"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "PRO-01",
+          "q": "Where does the master product list live today (system, spreadsheet)? Who owns it and who may change it?",
+          "pri": true
+        },
+        {
+          "id": "PRO-02",
+          "q": "How many active products (SKUs) do you stock in total and per store? Which are the top 100 sellers?",
+          "pri": false
+        },
+        {
+          "id": "PRO-03",
+          "q": "Which chronic-care medicines (blood pressure, diabetes, others) do you stock in depth, and which generics and brands are available for each?",
+          "pri": true
+        },
+        {
+          "id": "PRO-04",
+          "q": "What data do you hold for each product?",
+          "pri": false
+        },
+        {
+          "id": "PRO-05",
+          "q": "Do you have product photographs? If not, who will supply them?",
+          "pri": false
+        },
+        {
+          "id": "PRO-06",
+          "q": "Who sets prices, how often do they change, and who approves a change? What triggers one?",
+          "pri": true
+        },
+        {
+          "id": "PRO-07",
+          "q": "Can you honour a locked price for 90 days (Chronic Bundle)? What conditions would you need from suppliers?",
+          "pri": false
+        },
+        {
+          "id": "PRO-08",
+          "q": "How do you handle sudden supplier price rises? Who decides whether to absorb them?",
+          "pri": false
+        },
+        {
+          "id": "PRO-09",
+          "q": "Who are your main suppliers and distributors? Payment terms, delivery lead times, minimum orders?",
+          "pri": false
+        },
+        {
+          "id": "PRO-10",
+          "q": "How do you verify a supplier and the genuineness of a batch before accepting it?",
+          "pri": false
+        },
+        {
+          "id": "PRO-11",
+          "q": "What is recorded at goods receiving? Who does it, and is each batch number and expiry date captured?",
+          "pri": false
+        },
+        {
+          "id": "PRO-12",
+          "q": "How do you handle expiry today?",
+          "pri": false
+        },
+        {
+          "id": "PRO-13",
+          "q": "How do you decide reorder quantities? Do you forecast seasonal demand (for example malaria season)?",
+          "pri": false
+        },
+        {
+          "id": "PRO-14",
+          "q": "How often are products out of stock for chronic medicines? Which ones most often?",
+          "pri": false
+        },
+        {
+          "id": "PRO-15",
+          "q": "How are transfers between stores requested, approved, moved and recorded?",
+          "pri": false
+        },
+        {
+          "id": "PRO-16",
+          "q": "How would you find every customer who received a given batch if a recall was announced today?",
+          "pri": true
+        },
+        {
+          "id": "PRO-17",
+          "q": "How do you handle returns from customers and returns to suppliers?",
+          "pri": false
+        },
+        {
+          "id": "PRO-18",
+          "q": "Are there products you will not sell online (restricted, bulky, cold chain, high theft)?",
+          "pri": false
+        },
+        {
+          "id": "PRO-19",
+          "q": "Which stores can serve as fulfilment hubs for online orders in each city?",
+          "pri": false
+        },
+        {
+          "id": "PRO-20",
+          "q": "What stock accuracy do you believe you have today? When was the last full count and what difference did it show?",
+          "pri": false
+        },
+        {
+          "id": "PRO-21",
+          "q": "Who should see cost prices and margins, and who must not?",
+          "pri": false
+        },
+        {
+          "id": "PRO-22",
+          "q": "What reports do you need from the platform each day, week and month?",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "FIN",
+      "name": "Finance and accounts",
+      "short": "Finance",
+      "who": "Finance manager / accountant",
+      "color": "#B45309",
+      "groups": [
+        {
+          "title": "Payment methods and cash control",
+          "questions": [
+            "FIN-01",
+            "FIN-02",
+            "FIN-03",
+            "FIN-04"
+          ]
+        },
+        {
+          "title": "Refunds and payment failures",
+          "questions": [
+            "FIN-05",
+            "FIN-06",
+            "FIN-07"
+          ]
+        },
+        {
+          "title": "Fees, discounts, bundles and FX",
+          "questions": [
+            "FIN-08",
+            "FIN-09",
+            "FIN-10",
+            "FIN-11"
+          ]
+        },
+        {
+          "title": "Receipts, tax, software and suppliers",
+          "questions": [
+            "FIN-12",
+            "FIN-13",
+            "FIN-14"
+          ]
+        },
+        {
+          "title": "Reporting, audit and gateway fees",
+          "questions": [
+            "FIN-15",
+            "FIN-16",
+            "FIN-17"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "FIN-01",
+          "q": "Which payment methods will be live at launch (pay on delivery, bank transfer, card via Paystack, POS on delivery, others)?",
+          "pri": true
+        },
+        {
+          "id": "FIN-02",
+          "q": "Which bank accounts receive which payments? Who reconciles each one and how often?",
+          "pri": false
+        },
+        {
+          "id": "FIN-03",
+          "q": "How should pay-on-delivery cash and POS be collected, recorded, handed over and banked? Who signs for it?",
+          "pri": true
+        },
+        {
+          "id": "FIN-04",
+          "q": "What cash limits and controls apply to riders and stores?",
+          "pri": false
+        },
+        {
+          "id": "FIN-05",
+          "q": "What is the refund policy by reason (wrong item, damaged, late, unavailable, change of mind, prescription rejected) and the time limit?",
+          "pri": false
+        },
+        {
+          "id": "FIN-06",
+          "q": "Who may approve a refund and up to what amount? How is a refund paid back?",
+          "pri": false
+        },
+        {
+          "id": "FIN-07",
+          "q": "How do you handle failed payments, double payments and chargebacks?",
+          "pri": false
+        },
+        {
+          "id": "FIN-08",
+          "q": "What are the delivery fees and free-delivery thresholds you want at launch? Who approves changes?",
+          "pri": false
+        },
+        {
+          "id": "FIN-09",
+          "q": "How should discounts, coupons, loyalty points and price locks be recorded in the books?",
+          "pri": false
+        },
+        {
+          "id": "FIN-10",
+          "q": "How are prepaid Chronic Bundles and sponsor payments treated: liability, revenue recognition, refunds of unused months?",
+          "pri": false
+        },
+        {
+          "id": "FIN-11",
+          "q": "Do you accept foreign currency payments? Which accounts, rates, and who converts?",
+          "pri": false
+        },
+        {
+          "id": "FIN-12",
+          "q": "What invoices or receipts must the customer get? What tax treatment applies to each product category?",
+          "pri": false
+        },
+        {
+          "id": "FIN-13",
+          "q": "Which accounting software do you use and what must be exported to it?",
+          "pri": false
+        },
+        {
+          "id": "FIN-14",
+          "q": "What approvals are needed before a supplier is paid for stock ordered through the platform?",
+          "pri": false
+        },
+        {
+          "id": "FIN-15",
+          "q": "What financial reports do you want from the admin console?",
+          "pri": false
+        },
+        {
+          "id": "FIN-16",
+          "q": "What audit or tax requirements apply to online sales records?",
+          "pri": false
+        },
+        {
+          "id": "FIN-17",
+          "q": "Who monitors payment-gateway fees and settlement timing?",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "CSD",
+      "name": "Customer service, WhatsApp and call team",
+      "short": "Customer service",
+      "who": "Customer service lead, call or WhatsApp agents, store front-desk staff",
+      "color": "#DB2777",
+      "groups": [
+        {
+          "title": "Channels, ownership and support hours",
+          "questions": [
+            "CSD-01",
+            "CSD-02",
+            "CSD-03"
+          ]
+        },
+        {
+          "title": "Common questions and the advice boundary",
+          "questions": [
+            "CSD-04",
+            "CSD-05",
+            "CSD-06",
+            "CSD-07"
+          ]
+        },
+        {
+          "title": "Difficult situations and proactive messages",
+          "questions": [
+            "CSD-08",
+            "CSD-09",
+            "CSD-10"
+          ]
+        },
+        {
+          "title": "Complaints, information sharing and consent",
+          "questions": [
+            "CSD-11",
+            "CSD-12",
+            "CSD-13"
+          ]
+        },
+        {
+          "title": "Abuse, reviews and social media",
+          "questions": [
+            "CSD-14",
+            "CSD-15",
+            "CSD-16"
+          ]
+        },
+        {
+          "title": "Reporting, AI assistance and training",
+          "questions": [
+            "CSD-17",
+            "CSD-18",
+            "CSD-19"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "CSD-01",
+          "q": "Which channels do customers use today (phone, WhatsApp, Instagram, Facebook, email, walk-in)? Who answers each one?",
+          "pri": true
+        },
+        {
+          "id": "CSD-02",
+          "q": "Who owns the main WhatsApp number? How many people use it, from which devices, and how are chats handed over?",
+          "pri": false
+        },
+        {
+          "id": "CSD-03",
+          "q": "What are your published support hours and the response times you can truly meet, on weekdays, weekends and holidays?",
+          "pri": true
+        },
+        {
+          "id": "CSD-04",
+          "q": "What are the ten most common questions or problems?",
+          "pri": false
+        },
+        {
+          "id": "CSD-05",
+          "q": "What do you say and do when a customer asks for medical advice? When does the chat go to a pharmacist?",
+          "pri": false
+        },
+        {
+          "id": "CSD-06",
+          "q": "What may agents never say or promise?",
+          "pri": false
+        },
+        {
+          "id": "CSD-07",
+          "q": "Which languages and styles do customers use? Do agents use Pidgin or local languages, and should the brand voice allow it?",
+          "pri": false
+        },
+        {
+          "id": "CSD-08",
+          "q": "How do you handle an angry customer, a delay, a wrong item, a damaged item, a late delivery?",
+          "pri": false
+        },
+        {
+          "id": "CSD-09",
+          "q": "What should the customer receive proactively (confirmations, delays, dispatch, delivery, refill reminders)?",
+          "pri": false
+        },
+        {
+          "id": "CSD-10",
+          "q": "What compensation or goodwill gestures may agents offer on their own, and above what value must a manager approve?",
+          "pri": false
+        },
+        {
+          "id": "CSD-11",
+          "q": "How are complaints recorded, owned, and closed? How do you check customer satisfaction?",
+          "pri": false
+        },
+        {
+          "id": "CSD-12",
+          "q": "What customer information may be shared over WhatsApp? What must never be sent (for example prescription images in group chats, full addresses)?",
+          "pri": true
+        },
+        {
+          "id": "CSD-13",
+          "q": "How do you ask for and record consent for reminders, marketing and reviews?",
+          "pri": false
+        },
+        {
+          "id": "CSD-14",
+          "q": "How are abusive customers or suspected fraud (fake orders, repeated refusals) handled?",
+          "pri": false
+        },
+        {
+          "id": "CSD-15",
+          "q": "When and how do you ask customers for Google reviews? Who replies to them?",
+          "pri": false
+        },
+        {
+          "id": "CSD-16",
+          "q": "Who monitors social media comments and messages and how quickly do they reply?",
+          "pri": false
+        },
+        {
+          "id": "CSD-17",
+          "q": "What reports do you want on contacts per order, response time, resolution time and top issues?",
+          "pri": false
+        },
+        {
+          "id": "CSD-18",
+          "q": "Do you want an AI-drafted reply assistant? What approvals and limits should apply (the platform's assistant drafts only; a person sends)?",
+          "pri": false
+        },
+        {
+          "id": "CSD-19",
+          "q": "What training do agents need before launch, and who gives it?",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "DEL",
+      "name": "Delivery and logistics",
+      "short": "Delivery",
+      "who": "Logistics manager, dispatch lead, rider supervisor, any delivery partner",
+      "color": "#0891B2",
+      "groups": [
+        {
+          "title": "Riders, coverage and promises",
+          "questions": [
+            "DEL-01",
+            "DEL-02",
+            "DEL-03",
+            "DEL-04"
+          ]
+        },
+        {
+          "title": "Capacity, cost and vetting",
+          "questions": [
+            "DEL-05",
+            "DEL-06",
+            "DEL-07"
+          ]
+        },
+        {
+          "title": "Packing, proof and handover",
+          "questions": [
+            "DEL-08",
+            "DEL-09",
+            "DEL-10",
+            "DEL-11",
+            "DEL-12"
+          ]
+        },
+        {
+          "title": "Problems, transparency and exclusions",
+          "questions": [
+            "DEL-13",
+            "DEL-14",
+            "DEL-15"
+          ]
+        },
+        {
+          "title": "Interstate, security and platform needs",
+          "questions": [
+            "DEL-16",
+            "DEL-17",
+            "DEL-18"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "DEL-01",
+          "q": "Are riders employees, contractors, or an outside partner? Names of the partners and contacts.",
+          "pri": true
+        },
+        {
+          "id": "DEL-02",
+          "q": "Which areas can you deliver to within 2 hours and within 24 hours, from which stores?",
+          "pri": false
+        },
+        {
+          "id": "DEL-03",
+          "q": "What delivery times can you honestly promise, and what percentage do you meet today?",
+          "pri": true
+        },
+        {
+          "id": "DEL-04",
+          "q": "What are the cut-off times for same-day delivery by store?",
+          "pri": false
+        },
+        {
+          "id": "DEL-05",
+          "q": "How many riders and vehicles are available per store or area? What is the maximum number of orders per hour?",
+          "pri": false
+        },
+        {
+          "id": "DEL-06",
+          "q": "What do you charge or pay per delivery? What does a delivery really cost you, on average?",
+          "pri": false
+        },
+        {
+          "id": "DEL-07",
+          "q": "How are riders chosen, vetted, trained and insured? What is the process for lost or stolen medicine?",
+          "pri": false
+        },
+        {
+          "id": "DEL-08",
+          "q": "How are orders packed? What packaging, tamper seals and labels are used?",
+          "pri": false
+        },
+        {
+          "id": "DEL-09",
+          "q": "What proof of delivery do you require (photo, OTP, signature, call)? How is it linked to the order?",
+          "pri": false
+        },
+        {
+          "id": "DEL-10",
+          "q": "Who is allowed to receive a prescription medicine delivery? What if the patient is not home?",
+          "pri": false
+        },
+        {
+          "id": "DEL-11",
+          "q": "What happens if nobody is home, the address is wrong, or the customer refuses to pay?",
+          "pri": false
+        },
+        {
+          "id": "DEL-12",
+          "q": "How are pay-on-delivery cash and POS handled by riders? How is it settled and audited?",
+          "pri": false
+        },
+        {
+          "id": "DEL-13",
+          "q": "What happens when medicine is damaged or delayed in transit?",
+          "pri": false
+        },
+        {
+          "id": "DEL-14",
+          "q": "Should the customer see the rider's name and phone number? Under what safeguards?",
+          "pri": false
+        },
+        {
+          "id": "DEL-15",
+          "q": "Which products need special handling or are excluded from delivery?",
+          "pri": false
+        },
+        {
+          "id": "DEL-16",
+          "q": "How do you handle deliveries outside Lagos, Ogun, Oyo and Osun, or interstate? Which couriers?",
+          "pri": false
+        },
+        {
+          "id": "DEL-17",
+          "q": "What security rules apply to riders and cash in high-risk areas or times?",
+          "pri": false
+        },
+        {
+          "id": "DEL-18",
+          "q": "What do you need from the platform (manifest, route, batch details, scanner) to deliver faster?",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "MKT",
+      "name": "Marketing, brand and content",
+      "short": "Marketing",
+      "who": "Marketing lead, social media manager, designer, current agency",
+      "color": "#E11D48",
+      "groups": [
+        {
+          "title": "Brand assets and channels",
+          "questions": [
+            "MKT-01",
+            "MKT-02",
+            "MKT-03",
+            "MKT-04",
+            "MKT-05"
+          ]
+        },
+        {
+          "title": "HealthGist, rights and testimonials",
+          "questions": [
+            "MKT-06",
+            "MKT-07",
+            "MKT-08"
+          ]
+        },
+        {
+          "title": "Audience, seasons, offers and influencers",
+          "questions": [
+            "MKT-09",
+            "MKT-10",
+            "MKT-11",
+            "MKT-12"
+          ]
+        },
+        {
+          "title": "Competitors, limits, moderation and approvals",
+          "questions": [
+            "MKT-13",
+            "MKT-14",
+            "MKT-15",
+            "MKT-16"
+          ]
+        },
+        {
+          "title": "Advertising, events, press and broadcasts",
+          "questions": [
+            "MKT-17",
+            "MKT-18",
+            "MKT-19",
+            "MKT-20",
+            "MKT-21"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "MKT-01",
+          "q": "Please share logo files, colours, fonts and any brand guidelines. Is the platform's teal and type system approved as the brand look?",
+          "pri": true
+        },
+        {
+          "id": "MKT-02",
+          "q": "Do you have a written tagline, mission, values and 'about us' story? Please share them.",
+          "pri": false
+        },
+        {
+          "id": "MKT-03",
+          "q": "What are your current channels and handles?",
+          "pri": false
+        },
+        {
+          "id": "MKT-04",
+          "q": "Who administers each account and what is the posting routine today? What has worked and what has not?",
+          "pri": false
+        },
+        {
+          "id": "MKT-05",
+          "q": "How many followers/subscribers do you have and what content performs best?",
+          "pri": false
+        },
+        {
+          "id": "MKT-06",
+          "q": "What is the story behind 'HealthGist'? Should it become the name of the content programme and newsletter?",
+          "pri": false
+        },
+        {
+          "id": "MKT-07",
+          "q": "Which images and videos do you own and have rights to? Are there professional photographs of stores, products, staff?",
+          "pri": false
+        },
+        {
+          "id": "MKT-08",
+          "q": "What customer testimonials do you have, with written permission to publish?",
+          "pri": false
+        },
+        {
+          "id": "MKT-09",
+          "q": "Who is the primary customer you want to reach with content: chronic-care patients, parents, young adults, diaspora children, employers, HMOs? Rank them.",
+          "pri": true
+        },
+        {
+          "id": "MKT-10",
+          "q": "What health days and seasons matter to your business?",
+          "pri": false
+        },
+        {
+          "id": "MKT-11",
+          "q": "What offers and promotions do you run? Rules, dates, who approves, and legal limits?",
+          "pri": false
+        },
+        {
+          "id": "MKT-12",
+          "q": "What are your rules for influencers, ambassadors or health professionals who speak for Justrite?",
+          "pri": false
+        },
+        {
+          "id": "MKT-13",
+          "q": "Which competitors' content do you admire or dislike? Why?",
+          "pri": false
+        },
+        {
+          "id": "MKT-14",
+          "q": "What topics must we avoid because of regulation, culture, or past incidents?",
+          "pri": false
+        },
+        {
+          "id": "MKT-15",
+          "q": "How do you moderate comments and handle negative or false posts?",
+          "pri": false
+        },
+        {
+          "id": "MKT-16",
+          "q": "What are the approval steps and turnaround times for each content type, and who is the backup?",
+          "pri": true
+        },
+        {
+          "id": "MKT-17",
+          "q": "What is the company's stance on paid advertising for pharmacy products, and who is the contact at the ad platforms?",
+          "pri": false
+        },
+        {
+          "id": "MKT-18",
+          "q": "What events (health screenings, store openings, community drives) are planned in the next 6 months?",
+          "pri": false
+        },
+        {
+          "id": "MKT-19",
+          "q": "Do you have a press list or journalists you have worked with?",
+          "pri": false
+        },
+        {
+          "id": "MKT-20",
+          "q": "What newsletters, bulk SMS or WhatsApp broadcast lists exist, and was consent recorded?",
+          "pri": false
+        },
+        {
+          "id": "MKT-21",
+          "q": "What are your top 10 questions you wish customers asked, and top 10 myths you wish you could correct?",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "HRA",
+      "name": "HR, training and administration",
+      "short": "HR",
+      "who": "HR lead, admin manager, training lead",
+      "color": "#4D7C0F",
+      "groups": [
+        {
+          "title": "Structure and access",
+          "questions": [
+            "HRA-01",
+            "HRA-02",
+            "HRA-03"
+          ]
+        },
+        {
+          "title": "Training and super-users",
+          "questions": [
+            "HRA-04",
+            "HRA-05",
+            "HRA-06"
+          ]
+        },
+        {
+          "title": "Accountability, confidentiality and staff posting",
+          "questions": [
+            "HRA-07",
+            "HRA-08",
+            "HRA-09"
+          ]
+        },
+        {
+          "title": "Advocacy, performance and verification",
+          "questions": [
+            "HRA-10",
+            "HRA-11",
+            "HRA-12"
+          ]
+        },
+        {
+          "title": "Language, labour rules and improvement",
+          "questions": [
+            "HRA-13",
+            "HRA-14",
+            "HRA-15"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "HRA-01",
+          "q": "Please provide the staff structure for head office and the 14 stores (roles, numbers, reporting lines).",
+          "pri": true
+        },
+        {
+          "id": "HRA-02",
+          "q": "Which roles need access to: orders, prescriptions, customer data, stock, prices, refunds, reports, content?",
+          "pri": false
+        },
+        {
+          "id": "HRA-03",
+          "q": "Who requests, approves and removes staff accounts? How fast should leavers lose access?",
+          "pri": false
+        },
+        {
+          "id": "HRA-04",
+          "q": "What training and onboarding exist? How many days would you set aside for training in each store before launch?",
+          "pri": false
+        },
+        {
+          "id": "HRA-05",
+          "q": "What is the best time and format for training (in store, remote, short sessions, shifts)?",
+          "pri": false
+        },
+        {
+          "id": "HRA-06",
+          "q": "Who in each store would be the 'super-user' trainer?",
+          "pri": false
+        },
+        {
+          "id": "HRA-07",
+          "q": "What are the consequences of not following a safety or data rule, and who decides?",
+          "pri": false
+        },
+        {
+          "id": "HRA-08",
+          "q": "Do staff sign confidentiality or data-handling agreements? Please share the template.",
+          "pri": false
+        },
+        {
+          "id": "HRA-09",
+          "q": "What is your policy on staff posting about Justrite on personal social media or LinkedIn? Are staff allowed to be named and photographed?",
+          "pri": true
+        },
+        {
+          "id": "HRA-10",
+          "q": "May pharmacists and managers be asked to join a LinkedIn advocacy programme? Is it voluntary?",
+          "pri": false
+        },
+        {
+          "id": "HRA-11",
+          "q": "What are the staff performance measures that could be linked to the platform (SLA, accuracy, reviews)?",
+          "pri": false
+        },
+        {
+          "id": "HRA-12",
+          "q": "How are new joiners verified (licences, references)? Who keeps the register of professional registrations and their renewal dates?",
+          "pri": false
+        },
+        {
+          "id": "HRA-13",
+          "q": "What languages do staff speak and write well? Is there a need for training in English writing for customer messages?",
+          "pri": false
+        },
+        {
+          "id": "HRA-14",
+          "q": "Are there union, labour-law or working-hour constraints on shifts and on-call tasks?",
+          "pri": false
+        },
+        {
+          "id": "HRA-15",
+          "q": "How do staff report problems or suggest improvements? Who reviews them?",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "LEG",
+      "name": "Legal, compliance and regulatory",
+      "short": "Legal",
+      "who": "Legal adviser / compliance officer / Superintendent Pharmacist",
+      "color": "#475569",
+      "groups": [
+        {
+          "title": "Licences and registrations",
+          "questions": [
+            "LEG-01",
+            "LEG-02",
+            "LEG-03"
+          ]
+        },
+        {
+          "title": "Prescription sales, advertising and terms",
+          "questions": [
+            "LEG-04",
+            "LEG-05",
+            "LEG-06"
+          ]
+        },
+        {
+          "title": "Records, data rights and consent",
+          "questions": [
+            "LEG-07",
+            "LEG-08",
+            "LEG-09",
+            "LEG-10",
+            "LEG-11"
+          ]
+        },
+        {
+          "title": "Contracts, insurance and inspections",
+          "questions": [
+            "LEG-12",
+            "LEG-13",
+            "LEG-14",
+            "LEG-15"
+          ]
+        },
+        {
+          "title": "Disclaimers and disputes",
+          "questions": [
+            "LEG-16",
+            "LEG-17"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "LEG-01",
+          "q": "Please list every licence and registration.",
+          "pri": true
+        },
+        {
+          "id": "LEG-02",
+          "q": "Which licence numbers and names may be shown publicly, where, and in what wording?",
+          "pri": false
+        },
+        {
+          "id": "LEG-03",
+          "q": "Do all 14 stores have current licences? When does each expire and who tracks renewal?",
+          "pri": false
+        },
+        {
+          "id": "LEG-04",
+          "q": "What rules apply to the sale of prescription medicines through a website, to delivery, and to advertising them? Who has confirmed this in writing?",
+          "pri": true
+        },
+        {
+          "id": "LEG-05",
+          "q": "What are the rules on advertising pharmacy services and health products in Nigeria that apply to us (PCN, NAFDAC, APCON, others)? Is there a pre-approval process?",
+          "pri": false
+        },
+        {
+          "id": "LEG-06",
+          "q": "Who owns the Terms of Service and Privacy Policy, when were they last reviewed, and by whom?",
+          "pri": false
+        },
+        {
+          "id": "LEG-07",
+          "q": "How long must prescriptions, dispensing records, delivery records, and patient data be kept? Where?",
+          "pri": false
+        },
+        {
+          "id": "LEG-08",
+          "q": "How do customers exercise data rights (access, correction, deletion, withdrawing consent)? Who answers them and within what time?",
+          "pri": false
+        },
+        {
+          "id": "LEG-09",
+          "q": "What consent wording do you need for health data, reminders, marketing messages and reviews?",
+          "pri": false
+        },
+        {
+          "id": "LEG-10",
+          "q": "May the pharmacy share patient information with a family payer (Sponsor a Parent) and what consent is required?",
+          "pri": false
+        },
+        {
+          "id": "LEG-11",
+          "q": "What international data transfer rules apply to a diaspora payer, cloud hosting and third-party tools?",
+          "pri": false
+        },
+        {
+          "id": "LEG-12",
+          "q": "What contracts do you have with suppliers, HMOs and logistics partners that limit what we can say or do?",
+          "pri": false
+        },
+        {
+          "id": "LEG-13",
+          "q": "What insurance (professional indemnity, product liability, goods in transit, cyber) is in place?",
+          "pri": false
+        },
+        {
+          "id": "LEG-14",
+          "q": "How are regulatory inspections handled and what records must be produced within what time?",
+          "pri": false
+        },
+        {
+          "id": "LEG-15",
+          "q": "Who is the contact at PCN, NAFDAC and NDPC, and what is the status of any open correspondence?",
+          "pri": false
+        },
+        {
+          "id": "LEG-16",
+          "q": "What disclaimers or statements must appear in the footer, product pages and health content?",
+          "pri": false
+        },
+        {
+          "id": "LEG-17",
+          "q": "Is there any pending dispute, complaint or press issue we should know about before publishing?",
+          "pri": false
+        }
+      ]
+    },
+    {
+      "code": "ALL",
+      "name": "Cross-department questions",
+      "short": "Project-wide",
+      "who": "Everyone — answered once by the project sponsor with input from all",
+      "color": "#1D293B",
+      "groups": [
+        {
+          "title": "Project-wide questions",
+          "questions": [
+            "ALL-01",
+            "ALL-02",
+            "ALL-03",
+            "ALL-04",
+            "ALL-05",
+            "ALL-06",
+            "ALL-07",
+            "ALL-08",
+            "ALL-09"
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "id": "ALL-01",
+          "q": "Who is the single project sponsor and who is the day-to-day coordinator on Justrite's side?",
+          "pri": true
+        },
+        {
+          "id": "ALL-02",
+          "q": "What are the go / no-go conditions for opening public online ordering? Who signs off?",
+          "pri": true
+        },
+        {
+          "id": "ALL-03",
+          "q": "Which store or stores will pilot first, and why?",
+          "pri": false
+        },
+        {
+          "id": "ALL-04",
+          "q": "How will you decide that the pilot is working? Which numbers, over what period?",
+          "pri": false
+        },
+        {
+          "id": "ALL-05",
+          "q": "What is the escalation path when departments disagree (pharmacy versus sales, store versus head office)?",
+          "pri": false
+        },
+        {
+          "id": "ALL-06",
+          "q": "What meeting rhythm will you keep (daily stand-up, weekly review, monthly steering)?",
+          "pri": false
+        },
+        {
+          "id": "ALL-07",
+          "q": "What is the biggest risk you see in moving the website to the platform?",
+          "pri": false
+        },
+        {
+          "id": "ALL-08",
+          "q": "What would you want to change about how Justrite operates, if the system made it possible?",
+          "pri": false
+        },
+        {
+          "id": "ALL-09",
+          "q": "What did we not ask that we should have?",
+          "pri": false
+        }
+      ]
+    }
+  ]
+}

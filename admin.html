@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0A4A45">
+<title>Justrite Questionnaire · Coordinator</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none !important}
+:root{
+  --teal-950:#052926;--teal-900:#073834;--teal-800:#0A4A45;--teal-700:#0C5953;--teal-600:#0E6B64;
+  --mint-50:#F2F9F7;--mint-100:#E7F4F0;--mint-200:#D2EAE4;
+  --navy:#1D293B;--ink:#152220;--muted:#5B6B67;--soft:#7B8A86;--line:#DCE7E4;--line-strong:#C7D8D3;
+  --paper:#F5F8F6;--card:#fff;--amber:#8A5A00;--amber-bg:#FFF3D6;--amber-line:#F0D49A;
+  --red:#B42318;--red-bg:#FEF0EE;--green:#15803D;--green-bg:#EAF6EE;
+  --font:"Inter","Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  --mono:"Cascadia Code","SF Mono",Consolas,monospace;
+  --shadow:0 1px 2px rgba(10,45,38,.05),0 18px 40px -28px rgba(10,45,38,.35);
+}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--teal-700)}
+.hide{display:none !important}
+.eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-600);font-weight:800;margin:0 0 4px}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.top-in{max-width:1440px;margin:auto;padding:10px 20px;display:flex;align-items:center;gap:14px;min-height:60px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:36px;height:36px}
+.brand b{display:block;font-size:14px;line-height:1.15}
+.brand span{display:block;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);font-weight:800}
+.spacer{flex:1}
+.top-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1.5px solid transparent;border-radius:10px;padding:9px 14px;background:var(--teal-700);color:#fff;font-size:12.5px;font-weight:750;cursor:pointer;text-decoration:none;transition:background .15s,border-color .15s,transform .1s;white-space:nowrap}
+.btn:hover{background:var(--teal-800)}.btn:active{transform:translateY(1px)}
+.btn.ghost{background:#fff;border-color:var(--line-strong);color:#334641;box-shadow:none}
+.btn.ghost:hover{background:var(--mint-50);border-color:var(--teal-500)}
+.btn.danger{background:var(--red)}.btn.danger:hover{background:#8f1c13}
+.btn.sm{padding:7px 11px;font-size:11.5px;border-radius:9px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn svg{width:15px;height:15px}
+.icon-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:#fff;display:grid;place-items:center;cursor:pointer;color:#52655F}
+.icon-btn:hover{background:var(--mint-50)}
+.icon-btn svg{width:15px;height:15px}
+main{max-width:1440px;margin:auto;padding:24px 20px 70px}
+.login-wrap{min-height:calc(100vh - 150px);display:grid;place-items:center;padding:20px}
+.login-card{width:min(460px,100%);background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
+.login-card h1{margin:0 0 8px;font-size:28px;letter-spacing:-.03em}
+.login-card p{margin:0 0 18px;color:var(--muted);font-size:13px}
+.login-card label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#4C615C;font-weight:800;margin-bottom:6px}
+.login-card input{width:100%;border:1.5px solid var(--line-strong);border-radius:11px;padding:12px;font-size:14px;background:#FCFEFD}
+.login-card input:focus{outline:none;border-color:var(--teal-500);box-shadow:0 0 0 4px rgba(18,133,124,.1)}
+.login-card .btn{width:100%;margin-top:14px}
+.login-error{background:var(--red-bg);border:1px solid #F3C7C2;color:#8A1E15;border-radius:10px;padding:9px 11px;font-size:12px;margin-top:12px}
+.fine{font-size:11px;color:var(--soft);margin-top:16px;line-height:1.55}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px 17px;box-shadow:var(--shadow)}
+.stat .n{font-size:27px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
+.stat .l{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);font-weight:800;margin-top:5px}
+.stat .s{font-size:11px;color:var(--muted);margin-top:4px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.toolbar input,.toolbar select{border:1.5px solid var(--line-strong);border-radius:10px;padding:9px 11px;font-size:12.5px;background:#fff;min-width:150px}
+.toolbar input{flex:1;min-width:220px}
+.toolbar input:focus,.toolbar select:focus{outline:none;border-color:var(--teal-500);box-shadow:0 0 0 3px rgba(18,133,124,.1)}
+.last-sync{font-size:11px;color:var(--soft)}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.cardhead{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;padding:18px 20px 10px;flex-wrap:wrap}
+.cardhead h2{margin:0;font-size:19px;letter-spacing:-.02em}
+.cardhead p{margin:2px 0 0;font-size:12px;color:var(--muted);max-width:700px}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 9px;background:var(--mint-100);border:1px solid var(--mint-200);color:var(--teal-800);font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+.pill.grey{background:#F1F4F3;border-color:#E2E8E6;color:#5B6B67}
+.pill.amber{background:var(--amber-bg);border-color:var(--amber-line);color:var(--amber)}
+.pill.red{background:var(--red-bg);border-color:#F3C7C2;color:var(--red)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 12px;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.scroll-hint{display:none;font-size:10px;color:var(--soft);padding:7px 14px 0;font-weight:650;letter-spacing:.02em}
+.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 11px;font-size:11.5px;font-weight:700;color:#43554F;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.tab:hover{border-color:var(--teal-500);color:var(--teal-700)}
+.tab.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.tab .c{font-size:9.5px;background:rgba(0,0,0,.08);border-radius:999px;padding:1px 5px;font-weight:800}
+.tab.active .c{background:rgba(255,255,255,.18)}
+.team-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:16px 20px 10px;flex-wrap:wrap}
+.team-head h2{margin:0;font-size:18px;letter-spacing:-.02em}
+.team-head p{margin:3px 0 0;font-size:12px;color:var(--muted);max-width:760px}
+.team-actions{display:flex;gap:7px;flex-wrap:wrap}
+.tablewrap{overflow:auto;max-height:calc(100vh - 260px);border-top:1px solid var(--line);-webkit-overflow-scrolling:touch}
+table.team{border-collapse:separate;border-spacing:0;width:100%;min-width:700px;font-size:12px}
+table.team th,table.team td{border-bottom:1px solid #EAF0EE;padding:9px 10px;vertical-align:top;text-align:left}
+table.team thead th{position:sticky;top:0;z-index:5;background:#F4F8F6;color:#52655F;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:800}
+table.team thead th.qhead{left:0;z-index:7;min-width:250px;max-width:320px}
+table.team td.qcell{position:sticky;left:0;z-index:3;background:#fff;min-width:250px;max-width:320px;box-shadow:1px 0 0 #EAF0EE}
+table.team tbody tr:nth-child(even) td{background:#FBFDFC}
+table.team tbody tr:nth-child(even) td.qcell{background:#FBFDFC}
+table.team tbody tr.pri td.qcell{background:#FFFDF6}
+table.team tbody tr.pri:nth-child(even) td.qcell{background:#FFFDF6}
+.qid{font-family:var(--mono);font-size:9.5px;color:#7D8C88;letter-spacing:.03em}
+.qtext{font-size:12px;color:#2F433D;line-height:1.42;margin-top:2px}
+.star{color:#B7791F;font-weight:800;margin-left:4px}
+.coverage{font-size:9.5px;color:var(--soft);margin-top:4px;font-variant-numeric:tabular-nums}
+.coverage.good{color:var(--green)}.coverage.part{color:#9A6A00}.coverage.none{color:var(--red)}
+.resp-head b{display:block;font-size:11.5px;color:#1F332D;white-space:normal}
+.resp-head span{display:block;font-size:9.5px;color:var(--muted);margin-top:1px;white-space:normal}
+.resp-head .signed{color:var(--green);font-weight:700}
+.resp-head .unsigned{color:var(--red);font-weight:700}
+.ans{font-size:11.8px;line-height:1.48;white-space:pre-wrap;word-break:break-word;color:#263A34;max-width:420px}
+.ans .marker{display:inline-block;font-size:9px;font-weight:800;color:#7A5000;background:var(--amber-bg);border:1px solid var(--amber-line);border-radius:5px;padding:1px 4px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.ans .meta{display:block;font-size:9.5px;color:var(--soft);margin-top:2px}
+.dash{color:#B3C1BD}
+.empty{padding:30px 20px;text-align:center;color:var(--muted);font-size:12.5px}
+.empty b{display:block;color:#334641;font-size:14px;margin-bottom:4px}
+.resp-list{display:grid;gap:8px;padding:8px 16px 16px}
+.resp-row{display:grid;grid-template-columns:38px minmax(0,1fr) auto auto;gap:11px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
+.resp-row:hover{border-color:#B6D9D1}
+.av{width:34px;height:34px;border-radius:50%;background:var(--mint-100);color:var(--teal-800);display:grid;place-items:center;font-size:11px;font-weight:800}
+.resp-main{min-width:0}
+.resp-main b{font-size:13px;display:block;line-height:1.25}
+.resp-main .meta{font-size:10.8px;color:var(--muted);margin-top:1px}
+.chips{display:flex;gap:3px;flex-wrap:wrap;margin-top:4px}
+.chip{font-family:var(--mono);font-size:8.5px;border:1px solid var(--line);background:#F7FAF9;border-radius:4px;padding:1px 4px;color:#52655F}
+.resp-metrics{text-align:right;font-size:10.5px;color:var(--soft);line-height:1.5;white-space:nowrap;font-variant-numeric:tabular-nums}
+.resp-metrics b{color:#334641}
+.resp-actions{display:flex;gap:5px;align-items:center}
+.resp-actions .btn{padding:6px 9px;font-size:10.5px}
+@media(max-width:900px){
+  .tabs{flex-wrap:nowrap;overflow-x:auto;padding-left:14px;padding-right:14px}
+  .scroll-hint{display:block}
+}
+@media(max-width:760px){
+  .stats{grid-template-columns:1fr 1fr}
+  .resp-row{grid-template-columns:34px minmax(0,1fr) auto;gap:8px}
+  .resp-metrics{display:none}
+  .resp-actions{flex-direction:column}
+  .tablewrap{max-height:70vh}
+  .top-in{padding:9px 14px}
+  main{padding:16px 12px 60px}
+  .cardhead,.team-head{padding-left:14px;padding-right:14px}
+  .tabs{padding-left:14px;padding-right:14px}
+  .btn.sm{padding:6px 9px}
+  .top-actions .last-sync{display:none}
+  #backupBtn{display:none}
+  .top-actions .btn{padding:6px 9px;font-size:10.5px}
+  table.team{min-width:520px}
+  table.team th.qhead,table.team td.qcell{min-width:150px;max-width:170px}
+  .qtext{font-size:10.5px}
+  .resp-head b{font-size:10.5px}
+  .resp-head span{font-size:8.5px}
+  .ans{font-size:10.5px;max-width:none}
+}
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:16px}
+.modal[hidden]{display:none}
+.modal .scrim{position:absolute;inset:0;background:rgba(9,30,26,.48)}
+.modal .box{position:relative;background:#fff;border-radius:18px;width:min(900px,100%);max-height:88vh;overflow:auto;padding:22px 24px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.modal .box h3{margin:0 0 4px;font-size:20px;letter-spacing:-.02em}
+.modal .box p{margin:0 0 12px;font-size:12px;color:var(--muted)}
+.modal .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:18px}
+.modal .box .meta-grid{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:11px;color:var(--muted);margin:8px 0 14px}
+.modal .box .meta-grid b{color:#2F433D}
+.detail-block{border:1px solid var(--line);border-radius:11px;margin:8px 0;overflow:hidden}
+.detail-block summary{cursor:pointer;padding:9px 12px;background:#F7FAF9;font-size:12px;font-weight:750;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.detail-block summary::-webkit-details-marker{display:none}
+.detail-row{display:grid;grid-template-columns:64px minmax(0,1fr);gap:8px;padding:7px 12px;border-top:1px solid #EDF2F0;font-size:11.5px}
+.detail-row .id{font-family:var(--mono);font-size:9.5px;color:#7D8C88;padding-top:1px}
+.detail-row .q{color:#52655F;font-size:10.5px;margin-bottom:2px;line-height:1.4}
+.detail-row .a{color:#1E302A;white-space:pre-wrap;line-height:1.45}
+.detail-row .none{color:#9AA8A4;font-style:italic}
+.toasts{position:fixed;right:16px;bottom:16px;z-index:200;display:flex;flex-direction:column;gap:7px;max-width:340px}
+.toast{background:var(--navy);color:#fff;border-radius:10px;padding:10px 13px;font-size:12px;box-shadow:0 16px 40px rgba(0,0,0,.25);animation:tin .2s ease}
+@keyframes tin{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:620px){.toasts{left:12px;right:12px;max-width:none}}
+.footer-note{text-align:center;font-size:10.5px;color:var(--soft);padding:24px 10px 0;line-height:1.6}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="top-in">
+    <div class="brand">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="1" y="1" width="46" height="46" rx="12" fill="#fff"/><rect x="1" y="1" width="46" height="46" rx="12" fill="none" stroke="#DCE7E4"/><path d="M20 9h8v11h11v8H28v11h-8V28H9v-8h11z" fill="#18A24A"/><path d="M13.5 26.5c4.8 7.2 17 7.4 21.7-1.4" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <div><b>Justrite Pharmacy</b><span>Questionnaire responses</span></div>
+    </div>
+    <div class="spacer"></div>
+    <div class="top-actions" id="topActions" hidden>
+      <span class="last-sync" id="lastSync"></span>
+      <button class="btn ghost sm" id="refreshBtn">Refresh</button>
+      <button class="btn ghost sm" id="exportJson">JSON</button>
+      <button class="btn ghost sm" id="exportCsv">CSV</button>
+      <button class="btn ghost sm" id="backupBtn">Backup DB</button>
+      <button class="btn ghost sm" id="signOutBtn">Sign out</button>
+    </div>
+  </div>
+</header>
+<main>
+  <section id="login" class="login-wrap">
+    <div class="login-card">
+      <p class="eyebrow">Coordinator access</p>
+      <h1>Responses dashboard</h1>
+      <p>Enter the admin token configured on the server. It is kept only in this browser tab.</p>
+      <form id="loginForm">
+        <label for="tokenInput">Admin token</label>
+        <input id="tokenInput" type="password" autocomplete="current-password" placeholder="ADMIN_TOKEN">
+        <button class="btn" type="submit">Open dashboard</button>
+      </form>
+      <div id="loginError" class="login-error" hidden></div>
+      <p class="fine">Multiple staff can answer the same section. The team view shows every response side by side. Keep this token private; it is not stored in the page or in links.</p>
+    </div>
+  </section>
+
+  <section id="dashboard" hidden>
+    <div class="stats" id="stats"></div>
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Search name, role, store or section" autocomplete="off">
+      <select id="storeFilter"><option value="">All stores</option></select>
+      <button class="btn ghost sm" id="refreshBtn2">Refresh</button>
+      <span class="last-sync" id="lastSync2"></span>
+    </div>
+
+    <div class="card">
+      <div class="team-head">
+        <div>
+          <p class="eyebrow">Team view</p>
+          <h2>One section, many staff</h2>
+          <p>Pick a section to compare every respondent side by side. “Coverage” shows how many of the people who answered that section have an answer for each question.</p>
+        </div>
+        <div class="team-actions">
+          <button class="btn ghost sm" id="teamLinkBtn">Copy team link</button>
+          <button class="btn ghost sm" id="viewResponsesBtn">Responses below</button>
+        </div>
+      </div>
+      <div class="tabs" id="sectionTabs"></div>
+      <div class="scroll-hint">Swipe sideways to compare respondents →</div>
+      <div class="tablewrap"><table class="team" id="teamTable"><thead></thead><tbody></tbody></table></div>
+      <div id="teamEmpty" class="empty" hidden></div>
+    </div>
+
+    <div class="card" id="responsesCard">
+      <div class="cardhead">
+        <div><p class="eyebrow">All submissions</p><h2>Responses</h2></div>
+        <span class="pill grey" id="respCount">0</span>
+      </div>
+      <div class="resp-list" id="responseList"></div>
+    </div>
+    <div class="footer-note">Justrite Stakeholder Questionnaire · justrite.dependifyllc.com · Dependify LLC<br>Data stored in SQLite on this server. Download a backup regularly.</div>
+  </section>
+</main>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="modal" id="modal" hidden></div>
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=(v)=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=(iso)=>{if(!iso)return '—';const d=new Date(iso);return isNaN(d)?iso:d.toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});};
+const initials=(s)=>String(s||'').trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
+const MARKER={ 'dont-know':"Don't know",'no-rule':'No rule yet','na':'Not applicable' };
+let MEM_TOKEN='';
+const state={token:'',meta:null,byCode:{},responses:[],section:'',search:'',store:''};
+function getStoredToken(){try{return sessionStorage.getItem('jr_admin_token')||MEM_TOKEN;}catch(e){return MEM_TOKEN;}}
+function setStoredToken(t){try{sessionStorage.setItem('jr_admin_token',t);}catch(e){MEM_TOKEN=t;}}
+function clearStoredToken(){try{sessionStorage.removeItem('jr_admin_token');}catch(e){}MEM_TOKEN='';}
+function toast(msg,kind){
+  const root=$('#toasts'); if(root.children.length>2)root.firstElementChild.remove();
+  const el=document.createElement('div'); el.className='toast'; el.textContent=msg;
+  root.appendChild(el); setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .25s';setTimeout(()=>el.remove(),260);},4200);
+}
+async function api(path,options){
+  const opts=Object.assign({},options||{});
+  const headers=Object.assign({'Accept':'application/json'},opts.headers||{});
+  if(state.token)headers['Authorization']='Bearer '+state.token;
+  const res=await fetch(path,Object.assign({},opts,{headers}));
+  if(res.status===401){signOut('Your session expired. Enter the admin token again.');throw new Error('Unauthorized');}
+  if(!res.ok){let d={};try{d=await res.json();}catch(e){}throw new Error((d&&d.detail)||('Request failed ('+res.status+')'));}
+  return res;
+}
+function showLogin(message){
+  $('#login').hidden=false; $('#dashboard').hidden=true; $('#topActions').hidden=true;
+  if(message){const e=$('#loginError');e.textContent=message;e.hidden=false;}
+  setTimeout(()=>{const inp=$('#tokenInput');if(inp)inp.focus();},50);
+}
+function signOut(message){
+  clearStoredToken(); state.token=''; state.responses=[]; state.meta=null;
+  showLogin(message||'');
+}
+function answerText(a){
+  if(!a)return '';
+  const parts=[];
+  if(a.marker)parts.push('['+(MARKER[a.marker]||a.marker)+']');
+  if(Array.isArray(a.value)){if(a.value.length)parts.push(a.value.join(', '));}
+  else if(a.value)parts.push(String(a.value));
+  if(a.other)parts.push('Other: '+a.other);
+  if(a.note)parts.push('Note: '+a.note);
+  if(a.who)parts.push('Who can answer: '+a.who);
+  return parts.join(' — ');
+}
+function respSection(r){return (r.payload&&r.payload.sections)||[];}
+function respAnswers(r){return (r.payload&&r.payload.answers)||{};}
+function sectionTotal(codes){return (codes||[]).reduce((n,c)=>n+((state.byCode[c]&&state.byCode[c].questions.length)||0),0);}
+function sectionPriority(codes){return (codes||[]).reduce((n,c)=>n+((state.byCode[c]&&state.byCode[c].questions.filter(q=>q.pri).length)||0),0);}
+function answeredCount(r){return Object.keys(respAnswers(r)).length;}
+function priorityMissing(r){
+  let n=0; respSection(r).forEach(code=>{const s=state.byCode[code];if(!s)return;s.questions.forEach(q=>{if(q.pri&&!respAnswers(r)[q.id])n++;});}); return n;
+}
+function filteredResponses(){
+  const q=state.search.trim().toLowerCase();
+  return state.responses.filter(r=>{
+    const p=r.payload||{};const d=p.respondent||{};
+    if(state.store && d.store!==state.store)return false;
+    if(!q)return true;
+    const hay=[d.name,d.role,d.store,d.email,d.phone,respSection(r).join(' '),r.id,r.responseId].join(' ').toLowerCase();
+    return hay.indexOf(q)>=0;
+  });
+}
+function renderStats(){
+  const rs=state.responses;
+  const covered=new Set();rs.forEach(r=>respSection(r).forEach(c=>covered.add(c)));
+  let priTotal=0,priCovered=0;
+  Object.keys(state.byCode).forEach(code=>{
+    const s=state.byCode[code];s.questions.forEach(q=>{if(!q.pri)return;priTotal++;if(rs.some(r=>respSection(r).includes(code)&&respAnswers(r)[q.id]))priCovered++;});
+  });
+  const last=rs.length?Math.max.apply(null,rs.map(r=>new Date(r.receivedAt||0).getTime()||0)):0;
+  const lastLabel=last?fmt(new Date(last).toISOString()):'No responses yet';
+  $('#stats').innerHTML=`
+    <div class="stat"><div class="n">${rs.length}</div><div class="l">Responses</div><div class="s">Across all sections</div></div>
+    <div class="stat"><div class="n">${covered.size}<span style="font-size:14px;color:#7B8A86"> / 12</span></div><div class="l">Sections covered</div><div class="s">At least one response each</div></div>
+    <div class="stat"><div class="n">${priCovered}<span style="font-size:14px;color:#7B8A86"> / ${priTotal}</span></div><div class="l">Priority covered</div><div class="s">Answered by at least one person</div></div>
+    <div class="stat"><div class="n" style="font-size:17px;line-height:1.3">${esc(lastLabel)}</div><div class="l">Last response</div><div class="s">Server time</div></div>`;
+}
+function renderStoreFilter(){
+  const sel=$('#storeFilter');const stores={};
+  state.responses.forEach(r=>{const s=(r.payload&&r.payload.respondent&&r.payload.respondent.store)||'';if(s)stores[s]=true;});
+  const names=Object.keys(stores).sort();
+  sel.innerHTML='<option value="">All stores</option>'+names.map(s=>`<option value="${esc(s)}"${state.store===s?' selected':''}>${esc(s)}</option>`).join('');
+}
+function sectionCounts(){
+  const rs=filteredResponses();const counts={};
+  Object.keys(state.byCode).forEach(c=>counts[c]=rs.filter(r=>respSection(r).includes(c)).length);
+  return counts;
+}
+function ensureSection(){
+  if(state.section&&state.byCode[state.section])return;
+  const counts=sectionCounts();
+  let best='',bestN=-1;
+  Object.keys(state.byCode).forEach(c=>{if(counts[c]>bestN){best=c;bestN=counts[c];}});
+  state.section=best;
+}
+function renderTabs(){
+  ensureSection();
+  const counts=sectionCounts();
+  $('#sectionTabs').innerHTML=Object.keys(state.byCode).map(code=>{
+    const s=state.byCode[code];
+    return `<button class="tab ${state.section===code?'active':''}" data-section="${esc(code)}">${esc(code)} · ${esc(s.short)}<span class="c">${counts[code]||0}</span></button>`;
+  }).join('');
+  $$('#sectionTabs .tab').forEach(b=>b.addEventListener('click',()=>{state.section=b.dataset.section;renderTabs();renderTeam();}));
+}
+function renderTeam(){
+  ensureSection();
+  const code=state.section;const sec=state.byCode[code];
+  const rs=filteredResponses().filter(r=>respSection(r).includes(code));
+  const table=$('#teamTable');const empty=$('#teamEmpty');
+  if(!sec){table.hidden=true;empty.hidden=false;empty.innerHTML='<b>No section data.</b>';return;}
+  if(!rs.length){table.hidden=true;empty.hidden=false;empty.innerHTML=`<b>No responses for ${esc(sec.name)} yet.</b>Share the team link with the department; every person can submit their own answers.`;return;}
+  table.hidden=false;empty.hidden=true;
+  const head=`<tr><th class="qhead">Question · ${esc(sec.short)}</th>${rs.map(r=>{
+    const d=(r.payload&&r.payload.respondent)||{};const so=(r.payload&&r.payload.signoff)||{};
+    return `<th><div class="resp-head"><b>${esc(d.name||'Unnamed')}</b><span>${esc(d.role||'Role not set')}${d.store?' · '+esc(d.store):''}</span><span>${esc(fmt(r.receivedAt))} · ${so.confirmed?'<span class="signed">signed</span>':'<span class="unsigned">unsigned</span>'}</span></div></th>`;
+  }).join('')}</tr>`;
+  const rows=sec.questions.map(q=>{
+    const answered=rs.filter(r=>respAnswers(r)[q.id]).length;
+    const cls=answered===rs.length?'good':answered?'part':'none';
+    const cells=rs.map(r=>{
+      const a=respAnswers(r)[q.id];
+      if(!a)return '<td><span class="dash">—</span></td>';
+      let html='';
+      if(a.marker)html+=`<div class="marker">${esc(MARKER[a.marker]||a.marker)}</div>`;
+      const text=answerText(a);
+      if(text)html+=`<div class="ans">${esc(text)}</div>`;
+      return `<td>${html||'<span class="dash">—</span>'}</td>`;
+    }).join('');
+    return `<tr class="${q.pri?'pri':''}"><td class="qcell"><div class="qid">${esc(q.id)}${q.pri?'<span class="star">★</span>':''}</div><div class="qtext">${esc(q.q)}</div><div class="coverage ${cls}">${answered} of ${rs.length} answered</div></td>${cells}</tr>`;
+  }).join('');
+  table.querySelector('thead').innerHTML=head;
+  table.querySelector('tbody').innerHTML=rows;
+}
+function renderResponses(){
+  const rs=filteredResponses();
+  $('#respCount').textContent=rs.length+' response'+(rs.length===1?'':'s');
+  const list=$('#responseList');
+  if(!rs.length){list.innerHTML='<div class="empty"><b>No responses match this filter.</b>Adjust the search or store filter, or ask the team to submit.</div>';return;}
+  list.innerHTML=rs.map(r=>{
+    const d=(r.payload&&r.payload.respondent)||{};const so=(r.payload&&r.payload.signoff)||{};
+    const total=sectionTotal(respSection(r));const ans=answeredCount(r);const miss=r.priorityMissing!=null?r.priorityMissing:priorityMissing(r);
+    const chips=respSection(r).map(c=>`<span class="chip">${esc(c)}</span>`).join('');
+    return `<div class="resp-row">
+      <div class="av">${esc(initials(d.name))}</div>
+      <div class="resp-main"><b>${esc(d.name||'Unnamed')}</b><div class="meta">${esc(d.role||'Role not set')}${d.store?' · '+esc(d.store):''} · ${esc(fmt(r.receivedAt))}</div><div class="chips">${chips}${so.confirmed?'<span class="chip" style="color:#15803D;border-color:#BFE3CB;background:#EAF6EE">signed</span>':'<span class="chip" style="color:#B42318;border-color:#F3C7C2;background:#FEF0EE">unsigned</span>'}${r.version>1?`<span class="chip">v${r.version}</span>`:''}</div></div>
+      <div class="resp-metrics"><b>${ans}/${total}</b> answered<br>${miss?`<span style="color:#9B2C20">${miss} priority open</span>`:'all priorities'}<br>${esc(r.id.slice(0,8))}</div>
+      <div class="resp-actions"><button class="btn ghost sm" data-open="${esc(r.id)}">Open</button><button class="btn ghost sm" data-del="${esc(r.id)}" style="color:#9B2C20">Delete</button></div>
+    </div>`;
+  }).join('');
+  $$('#responseList [data-open]').forEach(b=>b.addEventListener('click',()=>openResponse(b.dataset.open)));
+  $$('#responseList [data-del]').forEach(b=>b.addEventListener('click',()=>confirmDelete(b.dataset.del)));
+}
+function openModal(html){
+  const m=$('#modal');m.hidden=false;m.innerHTML=`<div class="scrim" data-close></div><div class="box" role="dialog" aria-modal="true">${html}</div>`;document.body.style.overflow='hidden';
+  const scrim=m.querySelector('[data-close]');if(scrim)scrim.addEventListener('click',closeModal);
+}
+function closeModal(){const m=$('#modal');m.hidden=true;m.innerHTML='';document.body.style.overflow='';}
+function openResponse(id){
+  const r=state.responses.find(x=>x.id===id);if(!r)return;
+  const p=r.payload||{};const d=p.respondent||{};const so=p.signoff||{};
+  const blocks=(p.sections||[]).map((code,idx)=>{
+    const sec=state.byCode[code];if(!sec)return '';
+    const rows=sec.questions.map(q=>{
+      const a=(p.answers||{})[q.id];
+      return `<div class="detail-row"><span class="id">${esc(q.id)}${q.pri?' ★':''}</span><div><div class="q">${esc(q.q)}</div>${a?`<div class="a">${esc(answerText(a))}</div>`:'<div class="none">Not answered</div>'}</div></div>`;
+    }).join('');
+    return `<details class="detail-block" ${idx===0?'open':''}><summary><span>${esc(code)} · ${esc(sec.name)}</span><span style="font-size:10px;color:#7B8A86">${sec.questions.filter(q=>(p.answers||{})[q.id]).length}/${sec.questions.length}</span></summary>${rows}</details>`;
+  }).join('');
+  const extras=p.extras||{};const exBits=[];
+  if(extras.documents&&Object.keys(extras.documents).length)exBits.push('Documents checklist');
+  if(extras.table1&&Object.keys(extras.table1).length)exBits.push('Store tech table');
+  if(extras.sopOwners&&Object.keys(extras.sopOwners).length)exBits.push('SOP owners');
+  if(extras.raci&&extras.raci.cells&&Object.keys(extras.raci.cells).length)exBits.push('RACI');
+  openModal(`<h3>${esc(d.name||'Unnamed')}</h3>
+    <div class="meta-grid"><span><b>Role</b> ${esc(d.role||'—')}</span><span><b>Store</b> ${esc(d.store||'—')}</span><span><b>Phone</b> ${esc(d.phone||'—')}</span><span><b>Email</b> ${esc(d.email||'—')}</span><span><b>Received</b> ${esc(fmt(r.receivedAt))}</span><span><b>Updated</b> ${esc(fmt(r.updatedAt))}</span><span><b>Signed</b> ${so.confirmed?'Yes':'No'}</span><span><b>Version</b> ${esc(r.version)}</span><span><b>Receipt</b> ${esc(r.id)}</span></div>
+    ${exBits.length?`<p><b>Optional extras:</b> ${esc(exBits.join(' · '))}</p>`:''}
+    ${blocks||'<p>No answers.</p>'}
+    <div class="row"><button class="btn ghost" data-close-btn>Close</button><button class="btn ghost" id="dlOne">Download JSON</button><button class="btn danger" id="delOne">Delete</button></div>`);
+  $('#modal [data-close-btn]').addEventListener('click',closeModal);
+  $('#dlOne').addEventListener('click',()=>{const blob=new Blob([JSON.stringify(r.payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='justrite_response_'+r.id.slice(0,8)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);});
+  $('#delOne').addEventListener('click',()=>{closeModal();confirmDelete(r.id);});
+}
+function confirmDelete(id){
+  const r=state.responses.find(x=>x.id===id);const name=r&&r.payload&&r.payload.respondent?r.payload.respondent.name:'this response';
+  openModal(`<h3>Delete this response?</h3><p>${esc(name)} · ${esc(id.slice(0,8))}. This removes it from the server database and cannot be undone.</p><div class="row"><button class="btn ghost" data-close-btn>Cancel</button><button class="btn danger" id="delConfirm">Delete response</button></div>`);
+  $('#modal [data-close-btn]').addEventListener('click',closeModal);
+  $('#delConfirm').addEventListener('click',async()=>{try{await api('/api/admin/responses/'+encodeURIComponent(id),{method:'DELETE'});toast('Response deleted.');closeModal();await loadData();}catch(err){toast(err.message,'error');}});
+}
+function downloadFromApi(path,filename){
+  api(path).then(res=>res.blob()).then(blob=>{const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast(filename+' downloaded.');}).catch(err=>toast(err.message,'error'));
+}
+function copyText(text,okMsg){
+  const done=()=>toast(okMsg);
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done));}
+  else fallbackCopy(text,done);
+}
+function fallbackCopy(text,done){
+  const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');done();}catch(e){openModal(`<h3>Copy this link</h3><p>Select and copy the link below.</p><input class="login-card input" style="width:100%;border:1px solid #C7D8D3;border-radius:8px;padding:10px" readonly value="${esc(text)}"><div class="row"><button class="btn" data-close-btn>Close</button></div>`);const b=$('#modal [data-close-btn]');if(b)b.addEventListener('click',closeModal);}
+  ta.remove();
+}
+function render(){
+  renderStats();renderTabs();renderTeam();renderResponses();renderStoreFilter();
+  $('#lastSync').textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const l2=$('#lastSync2');if(l2)l2.textContent='Updated '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+async function loadData(){
+  const res=await api('/api/admin/responses');
+  const data=await res.json();
+  state.responses=data.responses||[];
+  if(!state.meta){
+    const mres=await fetch('/api/meta');state.meta=await mres.json();
+    state.byCode={};state.meta.sections.forEach(s=>{state.byCode[s.code]=s;});
+  }
+  $('#login').hidden=true;$('#dashboard').hidden=false;$('#topActions').hidden=false;
+  render();
+}
+async function boot(){
+  state.token=getStoredToken();
+  try{const mres=await fetch('/api/meta');state.meta=await mres.json();state.byCode={};state.meta.sections.forEach(s=>{state.byCode[s.code]=s;});}catch(e){}
+  if(!state.token){showLogin();return;}
+  try{await loadData();}catch(err){showLogin(err.message);}
+}
+$('#loginForm').addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const token=$('#tokenInput').value.trim();
+  if(!token){showLogin('Enter the admin token.');return;}
+  state.token=token;
+  try{await loadData();setStoredToken(token);$('#loginError').hidden=true;$('#tokenInput').value='';toast('Dashboard unlocked.');}
+  catch(err){state.token='';clearStoredToken();showLogin(err.message==='Unauthorized'?'That token was not accepted. Check ADMIN_TOKEN on the server.':err.message);}
+});
+$('#signOutBtn').addEventListener('click',()=>signOut('Signed out.'));
+$('#refreshBtn').addEventListener('click',()=>loadData().then(()=>toast('Refreshed.')).catch(err=>toast(err.message,'error')));
+$('#refreshBtn2').addEventListener('click',()=>loadData().then(()=>toast('Refreshed.')).catch(err=>toast(err.message,'error')));
+$('#exportJson').addEventListener('click',()=>downloadFromApi('/api/admin/export.json','justrite-questionnaire_'+new Date().toISOString().slice(0,10)+'.json'));
+$('#exportCsv').addEventListener('click',()=>downloadFromApi('/api/admin/export.csv','justrite-questionnaire_'+new Date().toISOString().slice(0,10)+'.csv'));
+$('#backupBtn').addEventListener('click',()=>downloadFromApi('/api/admin/backup.db','questionnaire-backup_'+new Date().toISOString().slice(0,10)+'.db'));
+$('#search').addEventListener('input',(e)=>{state.search=e.target.value;render();});
+$('#storeFilter').addEventListener('change',(e)=>{state.store=e.target.value;render();});
+$('#teamLinkBtn').addEventListener('click',()=>{
+  ensureSection();
+  const code=state.section;if(!code)return;
+  const basePath=location.pathname.replace(/\/admin(?:\.html)?\/?$/,'/');
+  const u=new URL(location.origin+basePath);u.searchParams.set('section',code);
+  if(state.store)u.searchParams.set('store',state.store);
+  openModal(`<h3>Team link · ${esc(state.byCode[code].name)}</h3><p>Send this to 2 or more staff. Each person enters their own name and submits their own answers for the same section.</p><input style="width:100%;border:1.5px solid #C7D8D3;border-radius:10px;padding:10px 12px;font:12px var(--mono)" readonly value="${esc(u.toString())}" id="teamLinkInput"><div class="row"><button class="btn ghost" data-close-btn>Close</button><button class="btn" id="copyTeam">Copy link</button></div>`);
+  $('#modal [data-close-btn]').addEventListener('click',closeModal);
+  $('#copyTeam').addEventListener('click',()=>{const v=$('#teamLinkInput').value;copyText(v,'Team link copied.');});
+});
+$('#viewResponsesBtn').addEventListener('click',()=>{const el=$('#responsesCard');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});});
+document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal();});
+boot();
+})();
+</script>
+</body>
+</html>

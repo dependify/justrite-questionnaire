@@ -1,0 +1,7 @@
+data/
+*.db
+.env
+__pycache__/
+.git/
+README.md
+DEPLOY-COOLIFY.md
