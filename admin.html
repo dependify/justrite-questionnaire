@@ -49,12 +49,6 @@ main{max-width:1440px;margin:auto;padding:24px 20px 70px}
 .login-card{width:min(460px,100%);background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
 .login-card h1{margin:0 0 8px;font-size:28px;letter-spacing:-.03em}
 .login-card p{margin:0 0 18px;color:var(--muted);font-size:13px}
-.login-card label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#4C615C;font-weight:800;margin-bottom:6px}
-.login-card input{width:100%;border:1.5px solid var(--line-strong);border-radius:11px;padding:12px;font-size:14px;background:#FCFEFD}
-.login-card input:focus{outline:none;border-color:var(--teal-500);box-shadow:0 0 0 4px rgba(18,133,124,.1)}
-.login-card .btn{width:100%;margin-top:14px}
-.login-error{background:var(--red-bg);border:1px solid #F3C7C2;color:#8A1E15;border-radius:10px;padding:9px 11px;font-size:12px;margin-top:12px}
-.fine{font-size:11px;color:var(--soft);margin-top:16px;line-height:1.55}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px 17px;box-shadow:var(--shadow)}
 .stat .n{font-size:27px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
@@ -195,18 +189,11 @@ table.team tbody tr.pri:nth-child(even) td.qcell{background:#FFFDF6}
   </div>
 </header>
 <main>
-  <section id="login" class="login-wrap">
+  <section id="loading" class="login-wrap">
     <div class="login-card">
       <p class="eyebrow">Coordinator access</p>
-      <h1>Responses dashboard</h1>
-      <p>Enter the admin token configured on the server. It is kept only in this browser tab.</p>
-      <form id="loginForm">
-        <label for="tokenInput">Admin token</label>
-        <input id="tokenInput" type="password" autocomplete="current-password" placeholder="ADMIN_TOKEN">
-        <button class="btn" type="submit">Open dashboard</button>
-      </form>
-      <div id="loginError" class="login-error" hidden></div>
-      <p class="fine">Multiple staff can answer the same section. The team view shows every response side by side. Keep this token private; it is not stored in the page or in links.</p>
+      <h1>Opening dashboard…</h1>
+      <p>Checking your admin session.</p>
     </div>
   </section>
 
@@ -266,11 +253,7 @@ const esc=(v)=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt
 const fmt=(iso)=>{if(!iso)return '—';const d=new Date(iso);return isNaN(d)?iso:d.toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});};
 const initials=(s)=>String(s||'').trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
 const MARKER={ 'dont-know':"Don't know",'no-rule':'No rule yet','na':'Not applicable' };
-let MEM_TOKEN='';
-const state={token:'',meta:null,byCode:{},responses:[],sessions:[],section:'',search:'',store:''};
-function getStoredToken(){try{return sessionStorage.getItem('jr_admin_token')||MEM_TOKEN;}catch(e){return MEM_TOKEN;}}
-function setStoredToken(t){try{sessionStorage.setItem('jr_admin_token',t);}catch(e){MEM_TOKEN=t;}}
-function clearStoredToken(){try{sessionStorage.removeItem('jr_admin_token');}catch(e){}MEM_TOKEN='';}
+const state={meta:null,byCode:{},responses:[],sessions:[],section:'',search:'',store:''};
 function toast(msg,kind){
   const root=$('#toasts'); if(root.children.length>2)root.firstElementChild.remove();
   const el=document.createElement('div'); el.className='toast'; el.textContent=msg;
@@ -279,20 +262,15 @@ function toast(msg,kind){
 async function api(path,options){
   const opts=Object.assign({},options||{});
   const headers=Object.assign({'Accept':'application/json'},opts.headers||{});
-  if(state.token)headers['Authorization']='Bearer '+state.token;
-  const res=await fetch(path,Object.assign({},opts,{headers}));
-  if(res.status===401){signOut('Your session expired. Enter the admin token again.');throw new Error('Unauthorized');}
+  const res=await fetch(path,Object.assign({},opts,{headers,credentials:'same-origin'}));
+  if(res.status===401){location.replace('/admin?expired=1');throw new Error('Unauthorized');}
   if(!res.ok){let d={};try{d=await res.json();}catch(e){}throw new Error((d&&d.detail)||('Request failed ('+res.status+')'));}
   return res;
 }
-function showLogin(message){
-  $('#login').hidden=false; $('#dashboard').hidden=true; $('#topActions').hidden=true;
-  if(message){const e=$('#loginError');e.textContent=message;e.hidden=false;}
-  setTimeout(()=>{const inp=$('#tokenInput');if(inp)inp.focus();},50);
-}
-function signOut(message){
-  clearStoredToken(); state.token=''; state.responses=[]; state.sessions=[]; state.meta=null;
-  showLogin(message||'');
+async function signOut(){
+  try{await fetch('/admin/logout',{method:'POST',credentials:'same-origin'});}catch(e){}
+  const d=$('#dashboard');if(d)d.hidden=true;
+  location.replace('/admin');
 }
 function answerText(a){
   if(!a)return '';
@@ -527,7 +505,7 @@ function copyText(text,okMsg){
 }
 function fallbackCopy(text,done){
   const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();
-  try{document.execCommand('copy');done();}catch(e){openModal(`<h3>Copy this link</h3><p>Select and copy the link below.</p><input class="login-card input" style="width:100%;border:1px solid #C7D8D3;border-radius:8px;padding:10px" readonly value="${esc(text)}"><div class="row"><button class="btn" data-close-btn>Close</button></div>`);const b=$('#modal [data-close-btn]');if(b)b.addEventListener('click',closeModal);}
+  try{document.execCommand('copy');done();}catch(e){openModal(`<h3>Copy this link</h3><p>Select and copy the link below.</p><input style="width:100%;border:1px solid #C7D8D3;border-radius:8px;padding:10px" readonly value="${esc(text)}"><div class="row"><button class="btn" data-close-btn>Close</button></div>`);const b=$('#modal [data-close-btn]');if(b)b.addEventListener('click',closeModal);}
   ta.remove();
 }
 function render(){
@@ -545,24 +523,14 @@ async function loadData(){
     const mres=await fetch('/api/meta');state.meta=await mres.json();
     state.byCode={};state.meta.sections.forEach(s=>{state.byCode[s.code]=s;});
   }
-  $('#login').hidden=true;$('#dashboard').hidden=false;$('#topActions').hidden=false;
+  $('#loading').hidden=true;$('#dashboard').hidden=false;$('#topActions').hidden=false;
   render();
 }
 async function boot(){
-  state.token=getStoredToken();
-  try{const mres=await fetch('/api/meta');state.meta=await mres.json();state.byCode={};state.meta.sections.forEach(s=>{state.byCode[s.code]=s;});}catch(e){}
-  if(!state.token){showLogin();return;}
-  try{await loadData();}catch(err){showLogin(err.message);}
+  try{await loadData();}
+  catch(err){if(err.message!=='Unauthorized')toast(err.message,'error');}
 }
-$('#loginForm').addEventListener('submit',async(e)=>{
-  e.preventDefault();
-  const token=$('#tokenInput').value.trim();
-  if(!token){showLogin('Enter the admin token.');return;}
-  state.token=token;
-  try{await loadData();setStoredToken(token);$('#loginError').hidden=true;$('#tokenInput').value='';toast('Dashboard unlocked.');}
-  catch(err){state.token='';clearStoredToken();showLogin(err.message==='Unauthorized'?'That token was not accepted. Check ADMIN_TOKEN on the server.':err.message);}
-});
-$('#signOutBtn').addEventListener('click',()=>signOut('Signed out.'));
+$('#signOutBtn').addEventListener('click',()=>signOut());
 $('#refreshBtn').addEventListener('click',()=>loadData().then(()=>toast('Refreshed.')).catch(err=>toast(err.message,'error')));
 $('#refreshBtn2').addEventListener('click',()=>loadData().then(()=>toast('Refreshed.')).catch(err=>toast(err.message,'error')));
 $('#exportJson').addEventListener('click',()=>downloadFromApi('/api/admin/export.json','justrite-questionnaire_'+new Date().toISOString().slice(0,10)+'.json'));

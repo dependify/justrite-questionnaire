@@ -16,7 +16,7 @@ RUN groupadd --system --gid 10001 app \
     && mkdir -p /data \
     && chown -R 10001:10001 /app /data
 
-COPY --chown=app:app server.py meta.json index.html admin.html entrypoint.py ./
+COPY --chown=app:app server.py meta.json index.html admin.html admin-login.html entrypoint.py ./
 
 # Run as root only for the entrypoint, which fixes /data ownership then drops to 10001.
 VOLUME ["/data"]

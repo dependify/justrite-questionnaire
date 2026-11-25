@@ -37,7 +37,8 @@ The session cookie contains only a random token; answers are never stored in `lo
 | `index.html` | The questionnaire. Self-contained; also works as a static download-only form when no server is present. |
 | `server.py` | Dependency-free Python server: static files, registration/session API, submission API, SQLite, admin API, exports, backup. |
 | `entrypoint.py` | Container startup: fixes `/data` ownership, drops to UID 10001, starts the server. |
-| `admin.html` | Coordinator dashboard: token sign-in, stats, side-by-side team view, registered people and live drafts, responses, exports. |
+| `admin.html` | Coordinator dashboard: stats, side-by-side team view, registered people and live drafts, responses, exports. |
+| `admin-login.html` | Branded password page served at `/admin` until a valid admin session exists. |
 | `meta.json` | Generated question/section metadata used by the server and dashboard. |
 | `Dockerfile` | Image for Coolify / Docker. |
 | `docker-compose.yml` | Local or single-host Compose setup. |
@@ -67,7 +68,7 @@ Open:
 - Team link example: `http://localhost:8000/?section=STO&store=Bariga`
 - Coordinator dashboard: `http://localhost:8000/admin`
 
-The admin token is required at startup; the server will not run without `ADMIN_TOKEN`.
+The admin token is required at startup; the server will not run without `ADMIN_TOKEN`. The `/admin` dashboard itself is protected by a server-enforced password page. By default the password is `ADMIN_TOKEN`; set `ADMIN_PASSWORD` to use a separate, easier-to-type password. A successful login sets a 12-hour `HttpOnly` admin cookie.
 
 ## Coolify
 
@@ -77,7 +78,7 @@ The short version:
 2. Coolify → **New Resource → Application → Git repository**.
 3. Build pack: **Dockerfile**; base directory `output/justrite-questionnaire` if using the whole repository.
 4. Port: `8000`.
-5. Environment: `ADMIN_TOKEN=<long random token>` and `DATA_DIR=/data`.
+5. Environment: `ADMIN_TOKEN=<long random token>`, optional `ADMIN_PASSWORD=<dashboard password>`, and `DATA_DIR=/data`.
 6. Persistent storage: mount a volume at **`/data`**.
 7. Health check: `/api/health`.
 8. Domain: `justrite.dependifyllc.com`; enable HTTPS. Deploy.
@@ -95,7 +96,10 @@ Full instructions, backups and troubleshooting: **[DEPLOY-COOLIFY.md](./DEPLOY-C
 
 ## Coordinator dashboard (`/admin`)
 
-- Token sign-in (the token is kept only in that browser tab).
+- `/admin` is server-gated: without a valid admin cookie it serves only the password page. The dashboard HTML is not exposed before login.
+- The password defaults to `ADMIN_TOKEN`; set `ADMIN_PASSWORD` to use a separate password. Login attempts are rate-limited.
+- A successful login sets a 12-hour `HttpOnly`, `SameSite=Lax` admin session cookie (`Secure` on HTTPS). The password is never stored in the page, URL or `localStorage`. Admin sessions are held in server memory, so a server restart or redeploy requires signing in again.
+- **Sign out** clears the admin cookie. The dashboard APIs accept either that cookie or `Authorization: Bearer <ADMIN_TOKEN>` for scripts.
 - Totals: responses, sections covered, priority questions covered by at least one person, last response.
 - **People & sessions:** every registered person, including live drafts that have not been submitted. Open a person to see their status, progress and current answers before they send.
 - **Team view:** choose a section and compare every respondent's answers side by side, with per-question coverage.
@@ -107,7 +111,9 @@ Full instructions, backups and troubleshooting: **[DEPLOY-COOLIFY.md](./DEPLOY-C
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `ADMIN_TOKEN` | **required** | Bearer token for `/api/admin/*` and the dashboard. Use 24+ random characters. |
+| `ADMIN_TOKEN` | **required** | Bearer token for `/api/admin/*` and fallback dashboard password. Use 24+ random characters. |
+| `ADMIN_PASSWORD` | `ADMIN_TOKEN` | Optional separate password for the `/admin` login page. Use 12+ characters. |
+| `LOGIN_RATE_LIMIT_PER_MIN` | `10` | Maximum admin login attempts per client IP per minute. Set `0` to disable. |
 | `DATA_DIR` | `./data` | Directory for `questionnaire.db`. In Coolify use `/data` with a persistent volume. |
 | `PORT` | `8000` | HTTP port. |
 | `MAX_BODY_BYTES` | `2000000` | Maximum submission size. |
@@ -121,10 +127,11 @@ Full instructions, backups and troubleshooting: **[DEPLOY-COOLIFY.md](./DEPLOY-C
 
 ## Security and privacy
 
-- The admin API requires `Authorization: Bearer <ADMIN_TOKEN>`; tokens are compared in constant time.
+- The admin API requires `Authorization: Bearer <ADMIN_TOKEN>` or a valid admin session cookie; values are compared in constant time.
+- `/admin` is server-gated; the dashboard HTML is only served after the password is accepted. Admin login attempts are rate-limited.
 - Security headers and CSP are set by the server; HTTPS is handled by Coolify.
 - The server accepts only JSON, caps body size, validates sections/questions and requires confirmation.
-- No external scripts, fonts or analytics. The form keeps only a first-party HttpOnly session cookie (random token); answers are not in cookies or localStorage.
+- No external scripts, fonts or analytics. The form keeps only a first-party HttpOnly session cookie (random token); answers are not in cookies or localStorage. The admin password is never stored in the browser.
 - Data is stored unencrypted in SQLite on the server volume; protect the host, the volume and every backup.
 - Do not collect patient-identifying information; the form tells respondents this.
 - Keep the admin token private and rotate it if it leaks.

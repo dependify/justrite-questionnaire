@@ -48,14 +48,16 @@ Set these in Coolify → Environment Variables:
 | Name | Value |
 |---|---|
 | `ADMIN_TOKEN` | A long random token. Generate with `openssl rand -hex 24`. |
+| `ADMIN_PASSWORD` | Optional separate password for the `/admin` login page. If unset, `ADMIN_TOKEN` is the password. |
+| `LOGIN_RATE_LIMIT_PER_MIN` | `10` (optional) — admin login attempts per IP per minute. |
 | `DATA_DIR` | `/data` |
 | `PORT` | `8000` |
 | `MAX_BODY_BYTES` | `2000000` (optional) |
 | `RATE_LIMIT_PER_MIN` | `20` (optional) |
 
-The container will refuse to start without `ADMIN_TOKEN`. This is deliberate: there is no default admin password.
+The container will refuse to start without `ADMIN_TOKEN`. This is deliberate: there is no default admin credential.
 
-Keep the token in a password manager. You will need it at `/admin`.
+Keep the token in a password manager. If you do not set `ADMIN_PASSWORD`, that token is also the password for the `/admin` login page. Set a separate `ADMIN_PASSWORD` if you want a shorter, easier-to-type dashboard password; the Bearer token remains available for API scripts.
 
 ## 4. Persistent storage (required)
 
@@ -92,7 +94,7 @@ Open:
 
 1. Open the team link.
 2. Enter a test name, answer two questions, sign off and **Submit response**.
-3. Open `/admin`, enter `ADMIN_TOKEN`.
+3. Open `/admin`, enter the admin password (`ADMIN_PASSWORD`, or `ADMIN_TOKEN` if unset).
 4. Confirm the response appears, the **Team view** shows the section, and **JSON / CSV / Backup DB** download.
 5. Submit a second response as another staff member and confirm both appear side by side.
 6. Delete the test responses in the dashboard when done.
@@ -177,7 +179,8 @@ That page comes from Coolify's proxy, not from this app. Work through these in o
 ### Other issues
 
 **401 on the dashboard**
-- The token is case-sensitive and must match `ADMIN_TOKEN` exactly.
+- Enter the dashboard password (`ADMIN_PASSWORD`, or `ADMIN_TOKEN` if unset). It is case-sensitive.
+- API clients can still use `Authorization: Bearer <ADMIN_TOKEN>`.
 - Change the variable in Coolify and redeploy.
 
 **`unable to open database file` or data disappears**
@@ -201,6 +204,7 @@ That page comes from Coolify's proxy, not from this app. Work through these in o
 docker build -t justrite-questionnaire .
 docker run --rm -p 8000:8000 \
   -e ADMIN_TOKEN=dev-token-change-me \
+  -e ADMIN_PASSWORD=dev-password-change-me \
   -v justrite-data:/data \
   justrite-questionnaire
 ```
@@ -216,8 +220,9 @@ docker compose up -d --build
 ## 12. Privacy and security checklist
 
 - Use HTTPS (Coolify handles certificates).
-- Use a long random `ADMIN_TOKEN`; rotate it if it leaks.
-- Keep the admin URL and token with the coordinator only.
+- Use a long random `ADMIN_TOKEN`; set a separate `ADMIN_PASSWORD` for the dashboard and rotate either if it leaks.
+- `/admin` is server-gated; the password is never stored in the page, URL or `localStorage`. Admin sessions expire after 12 hours.
+- Keep the admin URL and password with the coordinator only.
 - Do not add patient-identifying information to the questionnaire.
 - Download backups regularly and store them securely.
 - The server sets CSP, `X-Frame-Options`, `X-Content-Type-Options`, a body-size limit, a submission rate limit and constant-time token comparison.

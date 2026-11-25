@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import hmac
 import io
 import json
 import logging
@@ -26,17 +27,22 @@ from datetime import datetime, timezone
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = Path(os.environ.get("DATA_DIR", str(BASE_DIR / "data"))).resolve()
 DB_PATH = DATA_DIR / "questionnaire.db"
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "").strip()
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "").strip() or ADMIN_TOKEN
 PORT = int(os.environ.get("PORT", "8000"))
 MAX_BODY = int(os.environ.get("MAX_BODY_BYTES", "2000000"))
 RATE_LIMIT = int(os.environ.get("RATE_LIMIT_PER_MIN", "20"))
+LOGIN_RATE_LIMIT = int(os.environ.get("LOGIN_RATE_LIMIT_PER_MIN", "10"))
 SESSION_COOKIE = "jr_session"
 SESSION_MAX_AGE = 60 * 60 * 24 * 30
+ADMIN_COOKIE = "jr_admin"
+ADMIN_COOKIE_MAX_AGE = 12 * 60 * 60
+ADMIN_COOKIE_KEY = hashlib.sha256(f"{ADMIN_TOKEN}\0{ADMIN_PASSWORD}".encode()).digest()
 
 if not ADMIN_TOKEN:
     print(
@@ -63,11 +69,20 @@ MARKER_LABELS = {"dont-know": "Don't know", "no-rule": "No rule yet", "na": "Not
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("questionnaire")
+if ADMIN_PASSWORD == ADMIN_TOKEN:
+    log.info("admin password: using ADMIN_TOKEN")
+else:
+    log.info("admin password: configured via ADMIN_PASSWORD")
+if len(ADMIN_PASSWORD) < 12:
+    log.warning("ADMIN_PASSWORD is shorter than 12 characters; use a longer password.")
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 write_lock = threading.Lock()
 rate_lock = threading.Lock()
 post_hits: dict[str, deque] = defaultdict(deque)
+login_hits: dict[str, deque] = defaultdict(deque)
+admin_sessions: dict[str, int] = {}
+admin_lock = threading.Lock()
 
 CSP = (
     "default-src 'self' blob:; "
@@ -880,6 +895,67 @@ def allow_post(ip: str) -> bool:
         return True
 
 
+def allow_login(ip: str) -> bool:
+    if LOGIN_RATE_LIMIT <= 0:
+        return True
+    now = time.monotonic()
+    with rate_lock:
+        bucket = login_hits[ip]
+        while bucket and now - bucket[0] > 60:
+            bucket.popleft()
+        if len(bucket) >= LOGIN_RATE_LIMIT:
+            return False
+        bucket.append(now)
+        return True
+
+
+def make_admin_cookie() -> str:
+    jti = secrets.token_urlsafe(18)
+    expiry = int(time.time()) + ADMIN_COOKIE_MAX_AGE
+    signature = hmac.new(ADMIN_COOKIE_KEY, f"{jti}:{expiry}".encode(), hashlib.sha256).hexdigest()
+    now = int(time.time())
+    with admin_lock:
+        for stale in [key for key, until in admin_sessions.items() if until < now]:
+            admin_sessions.pop(stale, None)
+        admin_sessions[jti] = expiry
+    return f"{jti}.{expiry}.{signature}"
+
+
+def valid_admin_cookie(value: str | None) -> bool:
+    if not value:
+        return False
+    parts = value.split(".", 2)
+    if len(parts) != 3:
+        return False
+    jti, expiry_text, signature = parts
+    try:
+        expiry = int(expiry_text)
+    except ValueError:
+        return False
+    now = int(time.time())
+    if expiry < now:
+        return False
+    expected = hmac.new(ADMIN_COOKIE_KEY, f"{jti}:{expiry}".encode(), hashlib.sha256).hexdigest()
+    if not secrets.compare_digest(signature, expected):
+        return False
+    with admin_lock:
+        stored = admin_sessions.get(jti)
+        if stored is None or stored != expiry:
+            return False
+        if stored < now:
+            admin_sessions.pop(jti, None)
+            return False
+    return True
+
+
+def revoke_admin_cookie(value: str | None) -> None:
+    if not value:
+        return
+    jti = value.split(".", 1)[0]
+    with admin_lock:
+        admin_sessions.pop(jti, None)
+
+
 class Handler(BaseHTTPRequestHandler):
     server_version = "JustriteQuestionnaire/1.0"
     protocol_version = "HTTP/1.1"
@@ -905,6 +981,10 @@ class Handler(BaseHTTPRequestHandler):
         if self.command != "HEAD":
             self.wfile.write(body)
 
+    def cookie_is_secure(self) -> bool:
+        proto = self.headers.get("X-Forwarded-Proto", "").split(",")[0].strip().lower()
+        return proto == "https" or self.headers.get("X-Forwarded-Ssl", "").lower() == "on"
+
     def session_cookie_header(self, token: str | None, clear: bool = False) -> str:
         value = "" if clear else (token or "")
         max_age = 0 if clear else SESSION_MAX_AGE
@@ -915,22 +995,44 @@ class Handler(BaseHTTPRequestHandler):
             "SameSite=Lax",
             f"Max-Age={max_age}",
         ]
-        proto = self.headers.get("X-Forwarded-Proto", "").split(",")[0].strip().lower()
-        if proto == "https" or self.headers.get("X-Forwarded-Ssl", "").lower() == "on":
+        if self.cookie_is_secure():
             parts.append("Secure")
         return "; ".join(parts)
 
-    def session_token(self) -> str | None:
+    def admin_cookie_header(self, value: str | None, clear: bool = False) -> str:
+        cookie_value = "" if clear else (value or "")
+        max_age = 0 if clear else ADMIN_COOKIE_MAX_AGE
+        parts = [
+            f"{ADMIN_COOKIE}={cookie_value}",
+            "Path=/",
+            "HttpOnly",
+            "SameSite=Lax",
+            f"Max-Age={max_age}",
+        ]
+        if self.cookie_is_secure():
+            parts.append("Secure")
+        return "; ".join(parts)
+
+    def cookie_value(self, name: str) -> str | None:
         header = self.headers.get("Cookie", "")
         if not header:
             return None
         try:
             cookies = SimpleCookie()
             cookies.load(header)
-            morsel = cookies.get(SESSION_COOKIE)
+            morsel = cookies.get(name)
             return morsel.value if morsel else None
         except Exception:
             return None
+
+    def session_token(self) -> str | None:
+        return self.cookie_value(SESSION_COOKIE)
+
+    def admin_cookie_token(self) -> str | None:
+        return self.cookie_value(ADMIN_COOKIE)
+
+    def valid_admin_cookie(self) -> bool:
+        return valid_admin_cookie(self.admin_cookie_token())
 
     def current_session(self):
         token = self.session_token()
@@ -956,13 +1058,58 @@ class Handler(BaseHTTPRequestHandler):
             raise ApiError(500, "The application file is missing.")
         self.send_bytes(path.read_bytes(), "text/html; charset=utf-8")
 
+    def send_redirect(self, location: str, set_cookie: str | None = None) -> None:
+        self.send_response(303)
+        self.send_header("Location", location)
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", "0")
+        if set_cookie:
+            self.send_header("Set-Cookie", set_cookie)
+        self.base_headers()
+        self.end_headers()
+
     def require_admin(self) -> None:
         header = self.headers.get("Authorization", "")
-        if not header.startswith("Bearer "):
-            raise ApiError(401, "Unauthorized")
-        token = header[7:].strip()
-        if not secrets.compare_digest(token, ADMIN_TOKEN):
-            raise ApiError(401, "Unauthorized")
+        if header.startswith("Bearer "):
+            token = header[7:].strip()
+            if secrets.compare_digest(token, ADMIN_TOKEN):
+                return
+        if self.valid_admin_cookie():
+            return
+        raise ApiError(401, "Unauthorized")
+
+    def read_form_password(self) -> str:
+        raw_length = self.headers.get("Content-Length", "0")
+        try:
+            length = int(raw_length)
+        except ValueError:
+            length = 0
+        if length <= 0 or length > 4096:
+            if length > 4096:
+                self.close_connection = True
+            return ""
+        body = self.rfile.read(length)
+        try:
+            form = parse_qs(body.decode("utf-8", "replace"), keep_blank_values=True)
+        except Exception:
+            return ""
+        values = form.get("password") or [""]
+        return str(values[0])[:512]
+
+    def handle_admin_login(self) -> None:
+        forwarded = self.headers.get("X-Forwarded-For", "")
+        client_ip = forwarded.split(",")[0].strip() if forwarded else (self.client_address[0] if self.client_address else "unknown")
+        if not allow_login(client_ip):
+            log.warning("admin login rate limit from %s", client_ip)
+            self.send_redirect("/admin?error=locked")
+            return
+        password = self.read_form_password()
+        if not secrets.compare_digest(password, ADMIN_PASSWORD):
+            log.warning("failed admin login from %s", client_ip)
+            self.send_redirect("/admin?error=1")
+            return
+        log.info("admin login from %s", client_ip)
+        self.send_redirect("/admin", self.admin_cookie_header(make_admin_cookie()))
 
     def read_json(self):
         raw_length = self.headers.get("Content-Length", "0")
@@ -1047,7 +1194,13 @@ class Handler(BaseHTTPRequestHandler):
             self.send_html("index.html")
             return
         if path in ("/admin", "/admin/", "/admin.html"):
-            self.send_html("admin.html")
+            if not self.valid_admin_cookie():
+                self.send_html("admin-login.html")
+            else:
+                self.send_html("admin.html")
+            return
+        if path == "/admin/login":
+            self.send_redirect("/admin")
             return
         if path in ("/api/health", "/health", "/healthz"):
             try:
@@ -1153,6 +1306,14 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         forwarded = self.headers.get("X-Forwarded-For", "")
         client_ip = forwarded.split(",")[0].strip() if forwarded else (self.client_address[0] if self.client_address else "unknown")
+
+        if path == "/admin/login":
+            self.handle_admin_login()
+            return
+        if path == "/admin/logout":
+            revoke_admin_cookie(self.admin_cookie_token())
+            self.send_redirect("/admin", self.admin_cookie_header("", clear=True))
+            return
 
         if path == "/api/sessions":
             if not allow_post(client_ip):
